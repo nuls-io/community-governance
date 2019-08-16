@@ -1,0 +1,13 @@
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\model\VoteItem.java
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\model\VoteConfig.java
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\token\Token.java
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\event\AddItemEvent.java
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\func\BaseVote.java
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\model\VoteEntity.java
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\CommunityGovernanceContract.java
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\func\VoteStatus.java
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\event\VoteCreateEvent.java
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\event\VoteInitEvent.java
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\event\VoteEvent.java
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\token\SimpleToken.java
+E:\IdeaProjects\community-governance\src\main\java\io\nuls\contract\func\impl\BaseBaseVoteImpl.java

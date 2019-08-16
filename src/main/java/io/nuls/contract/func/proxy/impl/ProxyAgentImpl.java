@@ -1,0 +1,190 @@
+/**
+ * MIT License
+ * <p>
+ * Copyright (c) 2017-2018 nuls.io
+ * <p>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p>
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * <p>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package io.nuls.contract.func.proxy.impl;
+
+import io.nuls.contract.event.proxy.ModifyAgentEvent;
+import io.nuls.contract.event.proxy.RevokeAgentEvent;
+import io.nuls.contract.event.proxy.RevokeMandatorEvent;
+import io.nuls.contract.event.proxy.SetAgentEvent;
+import io.nuls.contract.func.proxy.ProxyAgent;
+import io.nuls.contract.model.proxy.Mandator;
+import io.nuls.contract.sdk.Msg;
+
+import java.util.*;
+
+import static io.nuls.contract.sdk.Utils.emit;
+import static io.nuls.contract.sdk.Utils.require;
+
+/**
+ * @author: Charlie
+ * @date: 2019/8/13
+ */
+public class ProxyAgentImpl implements ProxyAgent {
+
+    protected Map<String, Mandator> mandators = new HashMap<String, Mandator>();
+
+    protected Map<String, Set<String>> agents = new HashMap<String, Set<String>>();
+
+    @Override
+    public boolean setAgent(String agentAddress) {
+        require(null != agentAddress, "Agent address can not empty");
+        Mandator mandatorAgentAddress = mandators.get(agentAddress);
+        if(null != mandatorAgentAddress) {
+            require(!mandatorAgentAddress.getCloseAgent(), "This address does not accept proxy agent");
+        }
+        Mandator mandatorSender = mandators.get(Msg.sender().toString());
+        if(null == mandatorSender){
+            mandatorSender = new Mandator(Msg.sender().toString(), agentAddress);
+        }else{
+            require(null == mandatorSender.getAgentAddress(), "The address has an agent");
+        }
+        String mandatorAddress = mandatorSender.getAddress();
+        mandators.put(mandatorAddress, mandatorSender);
+
+        addMandatorToAgents(agentAddress, mandatorAddress);
+        //发送新增代理事件，包含委托人地址、代理地址
+        emit(new SetAgentEvent(mandatorAddress, agentAddress));
+        return true;
+    }
+
+    @Override
+    public boolean modifyAgent(String agentAddress) {
+        /**
+         * 该账户不接受委托
+         * 调用者如果没有设置过代理，则直接返回错误信息
+         * 修改代理人
+         * 发送事件
+         */
+        require(null != agentAddress, "Agent address can not empty");
+        Mandator mandatorAgentAddress = mandators.get(agentAddress);
+        if(null != mandatorAgentAddress) {
+            require(!mandatorAgentAddress.getCloseAgent(), "This address does not accept proxy agent");
+        }
+        Mandator mandatorSender = mandators.get(Msg.sender().toString());
+        require(null != mandatorSender && null != mandatorSender.getAgentAddress(), "The address has no agent");
+        //从旧的代理的委托人列表中删除
+        String oldAgentAddress = mandatorSender.getAgentAddress();
+        removeMandatorFromAgents(oldAgentAddress, mandatorSender.getAddress());
+        //设置新的代理人
+        mandatorSender.setAgentAddress(agentAddress);
+        addMandatorToAgents(agentAddress, mandatorSender.getAddress());
+        //发送更新代理事件，包含委托人地址、原代理地址、新代理地址
+        emit(new ModifyAgentEvent(mandatorSender.getAddress(), oldAgentAddress, agentAddress));
+        return true;
+    }
+
+    @Override
+    public boolean revokeAgent() {
+        Mandator mandatorSender = mandators.get(Msg.sender().toString());
+        require(null != mandatorSender && null != mandatorSender.getAgentAddress(), "The address has no agent");
+        String agentAddress = mandatorSender.getAgentAddress();
+        mandatorSender.setAgentAddress(null);
+        //如果没有设置委托人,并且可以接受委托，则不再需要持久化委托人信息
+        if(!mandatorSender.getCloseAgent()){
+            mandators.remove(mandatorSender);
+        }
+        //从代理的委托人列表中删除
+        removeMandatorFromAgents(agentAddress, mandatorSender.getAddress());
+        //发送撤销代理人事件，包含委托人地址、代理人地址
+        emit(new RevokeAgentEvent(mandatorSender.getAddress(), agentAddress));
+        return true;
+    }
+
+    @Override
+    public boolean revokeMandator(String mandatorAddress) {
+        require(null != mandatorAddress, "address can not empty");
+        String agentAddress = Msg.sender().toString();
+        removeMandatorFromAgents(agentAddress, mandatorAddress);
+        //发送撤销委托人事件，包含代理人地址、委托人地址
+        emit(new RevokeMandatorEvent(agentAddress, mandatorAddress));
+        return true;
+    }
+
+    @Override
+    public boolean closeAgent() {
+        String address = Msg.sender().toString();
+        Mandator mandator = mandators.get(address);
+        if(null == mandator){
+            mandator = new Mandator(address, null, true);
+            mandators.put(address, mandator);
+        }else{
+            //如果已经有人委托则不能关闭
+            Set<String> mandatorSet = agents.get(address);
+            if(null != mandatorSet){
+                require( mandatorSet.size() == 0, "The address has " + mandatorSet.size()
+                        + " mandators, so the function of not accepting delegation cannot be opened");
+            }
+            mandator.setCloseAgent(true);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean openAgent() {
+        String address = Msg.sender().toString();
+        Mandator mandator = mandators.get(address);
+        if(null == mandator){
+            mandator = new Mandator(address, null, false);
+            mandators.put(address, mandator);
+        }else{
+            mandator.setCloseAgent(false);
+        }
+        return true;
+    }
+
+    @Override
+    public String getAgent(String mandatorAddress) {
+        require(null != mandatorAddress, "address can not empty");
+        String agent = null;
+        Mandator mandator = mandators.get(mandatorAddress);
+        if(null != mandator){
+            agent = mandator.getAgentAddress();
+        }
+        return agent;
+    }
+
+    @Override
+    public Set<String> getMandators(String agentAddress) {
+        require(null != agentAddress, "Agent address can not empty");
+        return agents.get(agentAddress);
+    }
+
+
+    private void removeMandatorFromAgents(String agentAddress, String mandatorAddress){
+        Set<String> set = agents.get(agentAddress);
+        if(null != set){
+            set.remove(mandatorAddress);
+        }
+    }
+
+    private void addMandatorToAgents(String agentAddress, String mandatorAddress){
+        Set<String> mandatorSet = agents.get(agentAddress);
+        if(null == mandatorSet){
+            mandatorSet = new HashSet<>();
+        }
+        mandatorSet.add(mandatorAddress);
+        agents.put(agentAddress, mandatorSet);
+    }
+}
