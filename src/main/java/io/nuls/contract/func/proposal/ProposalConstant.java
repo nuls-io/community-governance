@@ -67,5 +67,5 @@ public interface ProposalConstant {
     /** 押金100NULS*/
     BigInteger RECOGNIZANCE = new BigInteger("10000000000");
 
-    long DAY15_MS = 86400000 * 15;
+    long DAY15_SECONDS = 86400 * 15;
 }

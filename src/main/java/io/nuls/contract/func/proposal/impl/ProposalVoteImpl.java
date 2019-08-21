@@ -33,6 +33,7 @@ import io.nuls.contract.func.proposal.ProposalVote;
 import io.nuls.contract.model.proposal.Proposal;
 import io.nuls.contract.model.proposal.ProposalConfig;
 import io.nuls.contract.sdk.Address;
+import io.nuls.contract.sdk.Block;
 import io.nuls.contract.sdk.Msg;
 
 import java.math.BigInteger;
@@ -53,6 +54,13 @@ public class ProposalVoteImpl implements ProposalVote {
      * K:提案id, V:Map(K:投票人; V:投票结果)
      */
     protected Map<Long, Map<Address, Integer>> voteRecords = new HashMap<>();
+
+    @Override
+    public Proposal getProposal(long id){
+        Proposal proposal = proposals.get(id);
+        require(null != proposal, "The proposal is nou exist");
+        return proposal;
+    }
 
     @Override
     public Proposal createProposal(String name, int type, String desc, String email) {
@@ -82,7 +90,7 @@ public class ProposalVoteImpl implements ProposalVote {
        /* Proposal proposal = proposals.get(proposalId);
         require(null != proposal, "Proposal is not exist, please check.");
         require(proposal.getStatus() == ProposalConstant.VOTING , "The proposal cannot currently vote, please check.");
-        long current = System.currentTimeMillis();
+        long current = Block.timestamp();
         require(proposal.getConfig().getStartTime() <= current && proposal.getConfig().getEndTime() >= current, "The proposal cannot currently vote, please check.");
 */
         Address address = Msg.sender();
@@ -91,7 +99,7 @@ public class ProposalVoteImpl implements ProposalVote {
             record = new HashMap<>();
             voteRecords.put(proposalId, record);
         }else{
-            require(record.containsKey(address),"The address already voted, please check.");
+            require(!record.containsKey(address),"The address already voted, please check.");
         }
         record.put(address, voteOptionId);
         emit(new VoteProposalEvent(proposalId, address.toString(), voteOptionId));
@@ -111,14 +119,14 @@ public class ProposalVoteImpl implements ProposalVote {
         require(null != proposal, "Proposal is not exist, please check.");
         String address = Msg.sender().toString();
         Map<String, String> auditRefuseRecords = proposal.getAuditRefuseRecords();
-        require(auditRefuseRecords.containsKey(address), "Director has reviewed");
+        require(!auditRefuseRecords.containsKey(address), "Director has reviewed");
         require(proposal.getStatus() == ProposalConstant.INREVIEW, "The Proposal audit has been end");
         if(auditOptionId == ProposalConstant.YES){
             //任意一个理事支持提案，则提案进入投票流程，审核流程终止。
             proposal.setStatus(ProposalConstant.VOTING);
             //设置投票时间段
-            long start = System.currentTimeMillis();
-            ProposalConfig proposalConfig = new ProposalConfig(start, start + ProposalConstant. DAY15_MS);
+            long start = Block.timestamp();
+            ProposalConfig proposalConfig = new ProposalConfig(start, start + ProposalConstant.DAY15_SECONDS);
             proposal.setConfig(proposalConfig);
         }else {
             //审核时， 拒绝后记录结果，满理事会成员总数，则表示提案最终被拒接
@@ -161,7 +169,7 @@ public class ProposalVoteImpl implements ProposalVote {
         if(proposal.getStatus() != ProposalConstant.VOTING ){
             return false;
         }
-        long current = System.currentTimeMillis();
+        long current = Block.timestamp();
         if(proposal.getConfig().getStartTime() > current || proposal.getConfig().getEndTime() < current){
             return false;
         }

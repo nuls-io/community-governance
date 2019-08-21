@@ -37,14 +37,6 @@ public class Mandator {
 
     private boolean closeAgent;
 
-    public Mandator() {
-    }
-
-    public Mandator(String address, String agentAddress) {
-        this.address = address;
-        this.agentAddress = agentAddress;
-    }
-
     public Mandator(String address, String agentAddress, boolean closeAgent) {
         this.address = address;
         this.agentAddress = agentAddress;

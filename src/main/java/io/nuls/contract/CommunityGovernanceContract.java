@@ -17,7 +17,9 @@ import io.nuls.contract.sdk.Address;
 import io.nuls.contract.sdk.Contract;
 import io.nuls.contract.sdk.Msg;
 import io.nuls.contract.sdk.Utils;
+import io.nuls.contract.sdk.annotation.JSONSerializable;
 import io.nuls.contract.sdk.annotation.Payable;
+import io.nuls.contract.sdk.annotation.Required;
 import io.nuls.contract.sdk.annotation.View;
 
 import java.math.BigInteger;
@@ -37,7 +39,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
 
     private ProposalVote proposalVote;
 
-    public CommunityGovernanceContract(long minRecognizance) {
+    public CommunityGovernanceContract(@Required long minRecognizance) {
         //票权委托
         proxyAgent = new ProxyAgentImpl();
         //理事会选举
@@ -50,7 +52,8 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
     }
 
     @Payable
-    public VoteEntity createBaseVote(String title, String desc, String[] items, long startTime, long endTime, boolean isMultipleSelect, int minSelectCount, int maxSelectCount, boolean voteCanModify) {
+    public VoteEntity createBaseVote(@Required String title, @Required String desc, @Required String[] items, @Required long startTime, @Required long endTime,
+                                     @Required boolean isMultipleSelect, @Required int minSelectCount, @Required int maxSelectCount, @Required boolean voteCanModify) {
         VoteEntity voteEntity = baseVote.create(title, desc, items);
 
         VoteConfig config = new VoteConfig(startTime, endTime, isMultipleSelect, minSelectCount, maxSelectCount, voteCanModify);
@@ -66,31 +69,31 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
 //        return baseVote.init(voteId, config);
 //    }
 
-    public boolean vote(long voteId, long[] itemIds) {
+    public boolean vote(@Required long voteId, @Required long[] itemIds) {
         return baseVote.vote(voteId, itemIds);
     }
 
-    public boolean redemptionVote(long voteId) {
+    public boolean redemptionVote(@Required long voteId) {
         return baseVote.redemption(voteId);
     }
 
     @View
-    public boolean canVote(long voteId) {
+    public boolean canVote(@Required long voteId) {
         return baseVote.canVote(voteId);
     }
 
     @View
-    public VoteEntity queryVote(long voteId) {
+    public VoteEntity queryVote(@Required long voteId) {
         return baseVote.queryVote(voteId);
     }
 
     @View
-    public Map<Address, List<Long>> queryVoteResult(long voteId) {
+    public Map<Address, List<Long>> queryVoteResult(@Required long voteId) {
         return baseVote.queryVoteResult(voteId);
     }
 
     @View
-    public boolean queryAddressHasVote(long voteId, Address address) {
+    public boolean queryAddressHasVote(@Required long voteId, @Required  Address address) {
         return baseVote.queryAddressHasVote(voteId, address);
     }
 
@@ -100,7 +103,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * @param agentAddress
      * @return
      */
-    public boolean setAgent(String agentAddress){
+    public boolean setAgent(@Required String agentAddress){
        return proxyAgent.setAgent(agentAddress);
     }
     /**
@@ -108,8 +111,8 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * @param agentAddress
      * @return
      */
-    public boolean modifyAgent(String agentAddress){
-        return proxyAgent.setAgent(agentAddress);
+    public boolean modifyAgent(@Required String agentAddress){
+        return proxyAgent.modifyAgent(agentAddress);
     }
     /**
      * 委托人撤销代理地址
@@ -122,7 +125,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * 代理人撤销委托人地址
      * @return
      */
-    public boolean revokeMandator(String mandatorAddress){
+    public boolean revokeMandator(@Required String mandatorAddress){
         return proxyAgent.revokeMandator(mandatorAddress);
     }
     /**
@@ -157,52 +160,67 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
     /**
      * 申请理事
      */
-    public boolean apply(int type, String desc, String email){
+    public boolean apply(@Required int type, @Required String desc, @Required String email){
         return councilVote.apply(type, desc, email);
     }
     /**
      * 获取理事信息
      */
     @View
-    public Applicant getApplicantInfo(String address){
+    @JSONSerializable
+    public Applicant getApplicantInfo(@Required String address){
         return councilVote.getApplicantInfo(address);
     }
     /**
      * 给理事投票
      */
-    public boolean voteDirector(String[] addresses){
+    public boolean voteDirector(@Required String[] addresses){
         return councilVote.voteDirector(addresses);
     }
     /**
      * 移除一个候选人
      */
-    public boolean removeApplicant(String address){
+    public boolean removeApplicant(@Required String address){
         onlyOwner();
         return councilVote.removeApplicant(address);
     }
     /**
      * 添加理事
      */
-    public boolean addDirector(String address){
+    public boolean addDirector(@Required String address){
         onlyOwner();
         return councilVote.addDirector(address);
     }
     /**
      * 移除理事
      */
-    public boolean removeDirector(String address){
+    public boolean removeDirector(@Required String address){
         onlyOwner();
         return councilVote.removeDirector(address);
     }
 
-
+    /**
+     * 获取理事会成员信息
+     * @return
+     */
+    @View
+    @JSONSerializable
+    public Map<String, Applicant> getCouncilMember(){
+        return councilVote.getCouncilMember();
+    }
 
     /**
      * 创建提案
      */
     @Payable
-    public Proposal createProposal(String name, int type, String desc, String email){
+    public Proposal createProposal(@Required String name, @Required int type, @Required String desc, @Required String email){
         return proposalVote.createProposal(name, type, desc, email);
+    }
+
+    @View
+    @JSONSerializable
+    public Proposal getProposal(@Required long id){
+        return proposalVote.getProposal(id);
     }
 
     /**
@@ -211,7 +229,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * @param voteOptionId 投票选项id
      * @return
      */
-    public boolean voteProposal(long proposalId, int voteOptionId){
+    public boolean voteProposal(@Required long proposalId, @Required int voteOptionId){
         return proposalVote.voteProposal(proposalId, voteOptionId);
     }
 
@@ -220,7 +238,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * @param proposalId 提案id
      * @param auditOptionId 审核选项 0:拒绝, 1:同意
      */
-    public void auditProposal(long proposalId, int auditOptionId, String reason){
+    public void auditProposal(@Required long proposalId, @Required int auditOptionId, String reason){
         /**
          * 是否是理事
          */
@@ -232,7 +250,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
     /**
      * 退还押金
      */
-    public boolean redemptionProposal(long proposalId){
+    public boolean redemptionProposal(@Required long proposalId){
         return proposalVote.redemption(proposalId);
     }
 }

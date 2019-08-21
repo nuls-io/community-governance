@@ -26,6 +26,8 @@ package io.nuls.contract.func.council;
 
 import io.nuls.contract.model.council.Applicant;
 
+import java.util.Map;
+
 /**
  * @author: Charlie
  * @date: 2019/8/14
@@ -82,5 +84,11 @@ public interface CouncilVote {
      * @return
      */
     boolean isCouncilMember(String address);
+
+    /**
+     * 获取理事会成员信息
+     * @return
+     */
+    Map<String, Applicant> getCouncilMember();
 
 }

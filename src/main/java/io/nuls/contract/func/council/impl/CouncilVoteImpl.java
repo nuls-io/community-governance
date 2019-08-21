@@ -56,6 +56,7 @@ public class CouncilVoteImpl implements CouncilVote {
     protected Map<String, Applicant> councilMember = new HashMap<>(CouncilConfig.COUNCIL_MEMBERS);
 
 
+    @Override
     public boolean isCouncilMember(String address){
         return councilMember.containsKey(address);
     }
@@ -66,11 +67,15 @@ public class CouncilVoteImpl implements CouncilVote {
         require(null != desc, "desc can not empty");
         require(null != email, "email can not empty");
         Address address = Msg.sender();
-        require(type == CouncilConfig.TECHNOLOGY && address.totalBalance().compareTo(CouncilConfig.TECHNOLOGY_ENTRY_MINIMUM) >= 0,
-                "The balance is not enough to apply for this type of director");
-        require(type != CouncilConfig.TECHNOLOGY && address.totalBalance().compareTo(CouncilConfig.NON_TECHNOLOGY_ENTRY_MINIMUM) >= 0,
-                "The balance is not enough to apply for this type of director");
         String addr = address.toString();
+        require(!allApplicants.containsKey(addr), "The address has applied");
+        if(type == CouncilConfig.TECHNOLOGY){
+            require(address.totalBalance().compareTo(CouncilConfig.TECHNOLOGY_ENTRY_MINIMUM) >= 0,
+                    "The balance is not enough to apply for this type of director");
+        }else{
+            require(address.totalBalance().compareTo(CouncilConfig.NON_TECHNOLOGY_ENTRY_MINIMUM) >= 0,
+                    "The balance is not enough to apply for this type of director");
+        }
         Applicant applicant = new Applicant(addr, type, desc, email);
         allApplicants.put(addr, applicant);
         emit(new ApplyEvent(addr, type));
@@ -106,7 +111,8 @@ public class CouncilVoteImpl implements CouncilVote {
             if (null == addressSet) {
                 addressSet = new HashSet<>();
             }
-            addressSet.add(voter);
+            boolean rs = addressSet.add(voter);
+            require(rs, "The address has already voted");
             votes.put(address, addressSet);
         }
         emit(new VoteDirectorEvent(voter, addresses));
@@ -132,5 +138,10 @@ public class CouncilVoteImpl implements CouncilVote {
         votes.remove(address);
         emit(new RemoveDirectorEvent(address));
         return true;
+    }
+
+    @Override
+    public Map<String, Applicant> getCouncilMember() {
+        return councilMember;
     }
 }

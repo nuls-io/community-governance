@@ -56,9 +56,10 @@ public class ProxyAgentImpl implements ProxyAgent {
         }
         Mandator mandatorSender = mandators.get(Msg.sender().toString());
         if(null == mandatorSender){
-            mandatorSender = new Mandator(Msg.sender().toString(), agentAddress);
+            mandatorSender = new Mandator(Msg.sender().toString(), agentAddress, false);
         }else{
             require(null == mandatorSender.getAgentAddress(), "The address has an agent");
+            mandatorSender.setAgentAddress(agentAddress);
         }
         String mandatorAddress = mandatorSender.getAddress();
         mandators.put(mandatorAddress, mandatorSender);
@@ -115,8 +116,13 @@ public class ProxyAgentImpl implements ProxyAgent {
     @Override
     public boolean revokeMandator(String mandatorAddress) {
         require(null != mandatorAddress, "address can not empty");
+        Mandator mandator = mandators.get(mandatorAddress);
+        require(null != mandator, "mandator is not exist");
+        require(null != mandator.getAgentAddress(), "mandator has not agent");
+        mandator.setAgentAddress(null);
         String agentAddress = Msg.sender().toString();
         removeMandatorFromAgents(agentAddress, mandatorAddress);
+
         //发送撤销委托人事件，包含代理人地址、委托人地址
         emit(new RevokeMandatorEvent(agentAddress, mandatorAddress));
         return true;
@@ -128,7 +134,6 @@ public class ProxyAgentImpl implements ProxyAgent {
         Mandator mandator = mandators.get(address);
         if(null == mandator){
             mandator = new Mandator(address, null, true);
-            mandators.put(address, mandator);
         }else{
             //如果已经有人委托则不能关闭
             Set<String> mandatorSet = agents.get(address);
@@ -136,8 +141,10 @@ public class ProxyAgentImpl implements ProxyAgent {
                 require( mandatorSet.size() == 0, "The address has " + mandatorSet.size()
                         + " mandators, so the function of not accepting delegation cannot be opened");
             }
+            require(!mandator.getCloseAgent(), "Agent closed");
             mandator.setCloseAgent(true);
         }
+        mandators.put(address, mandator);
         return true;
     }
 
@@ -149,6 +156,7 @@ public class ProxyAgentImpl implements ProxyAgent {
             mandator = new Mandator(address, null, false);
             mandators.put(address, mandator);
         }else{
+            require(mandator.getCloseAgent(), "Agent opened");
             mandator.setCloseAgent(false);
         }
         return true;
@@ -156,7 +164,10 @@ public class ProxyAgentImpl implements ProxyAgent {
 
     @Override
     public String getAgent(String mandatorAddress) {
-        require(null != mandatorAddress, "address can not empty");
+//        require(null != mandatorAddress, "address can not empty");
+        if(null == mandatorAddress){
+            mandatorAddress = Msg.sender().toString();
+        }
         String agent = null;
         Mandator mandator = mandators.get(mandatorAddress);
         if(null != mandator){
@@ -167,16 +178,19 @@ public class ProxyAgentImpl implements ProxyAgent {
 
     @Override
     public Set<String> getMandators(String agentAddress) {
-        require(null != agentAddress, "Agent address can not empty");
-        return agents.get(agentAddress);
+//        require(null != agentAddress, "Agent address can not empty");
+        if(null == agentAddress){
+            agentAddress = Msg.sender().toString();
+        }
+        Set<String> mandatorSet = agents.get(agentAddress);
+        return mandatorSet == null ? new HashSet<>(): mandatorSet;
     }
 
 
     private void removeMandatorFromAgents(String agentAddress, String mandatorAddress){
         Set<String> set = agents.get(agentAddress);
-        if(null != set){
-            set.remove(mandatorAddress);
-        }
+        require(null != agentAddress || set.size() > 0, "Agent not exist");
+        set.remove(mandatorAddress);
     }
 
     private void addMandatorToAgents(String agentAddress, String mandatorAddress){

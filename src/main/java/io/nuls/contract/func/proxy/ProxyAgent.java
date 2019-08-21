@@ -64,11 +64,14 @@ public interface ProxyAgent {
     boolean openAgent();
     /**
      * 查询委托人的代理地址 - view方法
+     * @param mandatorAddress 若不传参，默认以合约调用者地址作为委托人来查询代理地址
      * @return
      */
     String getAgent(String mandatorAddress);
+
     /**
      * 查询代理人的委托地址列表 - view方法
+     * @param agentAddress 若不传参，默认以合约调用者地址作为代理人来查询委托地址列表
      * @return
      */
     Set<String> getMandators(String agentAddress);

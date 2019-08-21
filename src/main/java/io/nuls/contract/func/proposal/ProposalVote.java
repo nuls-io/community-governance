@@ -32,6 +32,8 @@ import io.nuls.contract.model.proposal.Proposal;
  */
 public interface ProposalVote {
 
+
+    Proposal getProposal(long id);
     /**
      * 创建提案
      */
