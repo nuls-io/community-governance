@@ -1,7 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="83ed81b6-9857-4cba-bfaa-fb777bb432d2" name="Default Changelist" comment="" />
+    <list default="true" id="83ed81b6-9857-4cba-bfaa-fb777bb432d2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/offSmartContract.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/community-governance.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/CommunityGovernanceContract.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/council/AddDirectorEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/council/ApplyEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/council/RemoveApplicantEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/council/RemoveDirectorEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/council/VoteDirectorEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/proposal/AuditProposalEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/proposal/CreateProposalEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/proposal/VoteProposalEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/proxy/ModifyAgentEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/proxy/RevokeAgentEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/proxy/RevokeMandatorEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/proxy/SetAgentEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/vote/AddItemEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/vote/VoteCreateEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/vote/VoteEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/event/vote/VoteInitEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/func/council/CouncilConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/func/council/CouncilVote.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/func/council/impl/CouncilVoteImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/func/proposal/ProposalConstant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/func/proposal/ProposalVote.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/func/proposal/impl/ProposalVoteImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/func/proxy/ProxyAgent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/func/proxy/impl/ProxyAgentImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/func/vote/BaseVote.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/func/vote/VoteStatus.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/func/vote/impl/BaseBaseVoteImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/model/council/Applicant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/model/proposal/Proposal.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/model/proposal/ProposalConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/model/proxy/Mandator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/model/vote/VoteConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/model/vote/VoteEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/model/vote/VoteItem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/ownership/Ownable$OwnershipRenouncedEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/ownership/Ownable$OwnershipTransferredEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/io/nuls/contract/ownership/Ownable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/community-governance-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +73,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -47,7 +96,11 @@
     <option name="vmOptions" value="-DarchetypeCatalog=internal" />
   </component>
   <component name="ProjectId" id="1PM0rA8ZTYesksTGpbNlLTITOQj" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/io/nuls/contract/contract/token" />
@@ -147,5 +200,16 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

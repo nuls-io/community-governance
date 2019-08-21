@@ -1,6 +1,0 @@
-io\nuls\contract\event\VoteInitEvent.class
-io\nuls\contract\event\AddItemEvent.class
-io\nuls\contract\func\impl\BaseBaseVoteImpl.class
-io\nuls\contract\func\VoteStatus.class
-io\nuls\contract\event\VoteEvent.class
-io\nuls\contract\token\SimpleToken.class
