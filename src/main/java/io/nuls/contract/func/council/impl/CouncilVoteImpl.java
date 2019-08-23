@@ -104,6 +104,10 @@ public class CouncilVoteImpl implements CouncilVote {
     public boolean voteDirector(String[] addresses) {
         require(addresses != null && addresses.length > 0 && addresses.length < CouncilConfig.COUNCIL_MEMBERS, "The number of voting addresses must be between 1 and 11");
         String voter = Msg.sender().toString();
+        //扫描之前的投票记录，如果该投票者投过票则先取消，再重新记录新的投票
+        for(Set<String> set : votes.values()){
+            set.remove(voter);
+        }
         for (int i = 0; i < addresses.length; i++) {
             String address = addresses[i];
             require(allApplicants.containsKey(address), address + "is not a applicant's address and cannot be voted on");
@@ -111,8 +115,7 @@ public class CouncilVoteImpl implements CouncilVote {
             if (null == addressSet) {
                 addressSet = new HashSet<>();
             }
-            boolean rs = addressSet.add(voter);
-            require(rs, "The address has already voted");
+            addressSet.add(voter);
             votes.put(address, addressSet);
         }
         emit(new VoteDirectorEvent(voter, addresses));
