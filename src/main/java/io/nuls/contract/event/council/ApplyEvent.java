@@ -33,10 +33,14 @@ import io.nuls.contract.sdk.Event;
 public class ApplyEvent implements Event {
     private String address;
     private int type;
+    private String desc;
+    private String email;
 
-    public ApplyEvent(String address, int type) {
+    public ApplyEvent(String address, int type, String desc, String email) {
         this.address = address;
         this.type = type;
+        this.desc = desc;
+        this.email = email;
     }
 
     public String getAddress() {
@@ -53,5 +57,21 @@ public class ApplyEvent implements Event {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

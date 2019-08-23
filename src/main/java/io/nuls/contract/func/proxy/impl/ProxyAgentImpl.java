@@ -84,9 +84,10 @@ public class ProxyAgentImpl implements ProxyAgent {
             require(!mandatorAgentAddress.getCloseAgent(), "This address does not accept proxy agent");
         }
         Mandator mandatorSender = mandators.get(Msg.sender().toString());
-        require(null != mandatorSender && null != mandatorSender.getAgentAddress(), "The address has no agent");
-        //从旧的代理的委托人列表中删除
         String oldAgentAddress = mandatorSender.getAgentAddress();
+        require(!agentAddress.equals(oldAgentAddress),"The old and new agent addresses are the same");
+        require(null != mandatorSender && null != oldAgentAddress, "The address has no agent");
+        //从旧的代理的委托人列表中删除
         removeMandatorFromAgents(oldAgentAddress, mandatorSender.getAddress());
         //设置新的代理人
         mandatorSender.setAgentAddress(agentAddress);

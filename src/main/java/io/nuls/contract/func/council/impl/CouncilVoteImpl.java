@@ -78,7 +78,7 @@ public class CouncilVoteImpl implements CouncilVote {
         }
         Applicant applicant = new Applicant(addr, type, desc, email);
         allApplicants.put(addr, applicant);
-        emit(new ApplyEvent(addr, type));
+        emit(new ApplyEvent(addr, type, desc, email));
         return false;
     }
 
