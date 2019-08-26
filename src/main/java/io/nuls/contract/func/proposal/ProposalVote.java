@@ -33,7 +33,7 @@ import io.nuls.contract.model.proposal.Proposal;
 public interface ProposalVote {
 
 
-    Proposal getProposal(long id);
+    Proposal getProposal(int id);
     /**
      * 创建提案
      */
@@ -45,17 +45,17 @@ public interface ProposalVote {
      * @param voteOptionId 投票选项id
      * @return
      */
-    boolean voteProposal(long proposalId, int voteOptionId);
+    boolean voteProposal(int proposalId, int voteOptionId);
 
     /**
      * 审核提案
      * @param proposalId 提案id
      * @param auditOptionId 审核选项 0:拒绝, 1:同意
      */
-    void auditProposal(long proposalId, int auditOptionId, String reason);
+    void auditProposal(int proposalId, int auditOptionId, String reason);
 
     /**
      * 退还押金
      */
-    boolean redemption(long proposalId);
+    boolean redemption(int proposalId);
 }

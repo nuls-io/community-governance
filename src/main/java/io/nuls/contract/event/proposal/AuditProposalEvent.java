@@ -31,23 +31,45 @@ import io.nuls.contract.sdk.Event;
  * @date: 2019/8/15
  */
 public class AuditProposalEvent implements Event {
-    private Long id;
+    private int id;
     private String address;
     private int state;
     private String reason;
+    /** 如果审核通过则提案状态会改变，如果审核拒绝则不需要改变提案状态 值为null */
+    private Byte proposalStatus;
+    private Long startTime;
+    private Long endTime;
 
-    public AuditProposalEvent(Long id, String address, int state, String reason) {
+    public AuditProposalEvent(int id, String address, int state, String reason) {
         this.id = id;
         this.address = address;
         this.state = state;
         this.reason = reason;
     }
 
-    public Long getId() {
+    public AuditProposalEvent(int id, String address, int state, String reason, Byte proposalStatus) {
+        this.id = id;
+        this.address = address;
+        this.state = state;
+        this.reason = reason;
+        this.proposalStatus = proposalStatus;
+    }
+
+    public AuditProposalEvent(int id, String address, int state, String reason, Byte proposalStatus, Long startTime, Long endTime) {
+        this.id = id;
+        this.address = address;
+        this.state = state;
+        this.reason = reason;
+        this.proposalStatus = proposalStatus;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -73,5 +95,29 @@ public class AuditProposalEvent implements Event {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public Byte getProposalStatus() {
+        return proposalStatus;
+    }
+
+    public void setProposalStatus(Byte proposalStatus) {
+        this.proposalStatus = proposalStatus;
+    }
+
+    public Long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
+    }
+
+    public Long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Long endTime) {
+        this.endTime = endTime;
     }
 }

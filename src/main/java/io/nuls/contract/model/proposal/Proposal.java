@@ -36,7 +36,7 @@ import java.util.Map;
  * @date: 2019/8/15
  */
 public class Proposal {
-    private Long id;
+    private int id;
     private String name;
     private int type;
     private String desc;
@@ -50,7 +50,7 @@ public class Proposal {
     public Proposal() {
     }
 
-    public Proposal(Long id, String name, int type, String desc, String email, Address owner) {
+    public Proposal(int id, String name, int type, String desc, String email, Address owner) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -59,11 +59,11 @@ public class Proposal {
         this.owner = owner;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

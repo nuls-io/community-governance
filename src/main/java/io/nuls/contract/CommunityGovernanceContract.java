@@ -219,7 +219,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
 
     @View
     @JSONSerializable
-    public Proposal getProposal(@Required long id){
+    public Proposal getProposal(@Required int id){
         return proposalVote.getProposal(id);
     }
 
@@ -229,7 +229,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * @param voteOptionId 投票选项id
      * @return
      */
-    public boolean voteProposal(@Required long proposalId, @Required int voteOptionId){
+    public boolean voteProposal(@Required int proposalId, @Required int voteOptionId){
         return proposalVote.voteProposal(proposalId, voteOptionId);
     }
 
@@ -238,7 +238,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * @param proposalId 提案id
      * @param auditOptionId 审核选项 0:拒绝, 1:同意
      */
-    public void auditProposal(@Required long proposalId, @Required int auditOptionId, String reason){
+    public void auditProposal(@Required int proposalId, @Required int auditOptionId, String reason){
         /**
          * 是否是理事
          */
@@ -250,7 +250,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
     /**
      * 退还押金
      */
-    public boolean redemptionProposal(@Required long proposalId){
+    public boolean redemptionProposal(@Required int proposalId){
         return proposalVote.redemption(proposalId);
     }
 }

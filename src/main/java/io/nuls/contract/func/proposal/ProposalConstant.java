@@ -50,7 +50,7 @@ public interface ProposalConstant {
 
     /** 审核通过*/
     int YES = 1;
-    /** 审核拒接*/
+    /** 审核拒绝*/
     int NO = 0;
 
     /** 审核中*/
@@ -62,7 +62,7 @@ public interface ProposalConstant {
 //    /** 通过*/
 //    int ADOPTED = 4;
 //    /** 未通过*/
-//    int REJECTED = 4;
+//    int REJECTED = 5;
 
     /** 押金100NULS*/
     BigInteger RECOGNIZANCE = new BigInteger("10000000000");

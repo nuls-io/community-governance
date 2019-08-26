@@ -24,29 +24,28 @@
 
 package io.nuls.contract.event.proposal;
 
+
 import io.nuls.contract.sdk.Event;
 
 /**
  * @author: Charlie
- * @date: 2019/8/15
+ * @date: 2019/8/26
  */
-public class VoteProposalEvent implements Event {
-    private int id;
+public class RedemptionProposalEvent implements Event {
+    private int ProposalId;
     private String address;
-    private int result;
 
-    public VoteProposalEvent(int id, String address, int result) {
-        this.id = id;
+    public RedemptionProposalEvent(int proposalId, String address) {
+        ProposalId = proposalId;
         this.address = address;
-        this.result = result;
     }
 
-    public int getId() {
-        return id;
+    public int getProposalId() {
+        return ProposalId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setProposalId(int proposalId) {
+        ProposalId = proposalId;
     }
 
     public String getAddress() {
@@ -55,13 +54,5 @@ public class VoteProposalEvent implements Event {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public int getResult() {
-        return result;
-    }
-
-    public void setResult(int result) {
-        this.result = result;
     }
 }

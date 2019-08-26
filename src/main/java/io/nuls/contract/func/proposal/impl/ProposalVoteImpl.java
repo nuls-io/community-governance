@@ -26,6 +26,7 @@ package io.nuls.contract.func.proposal.impl;
 
 import io.nuls.contract.event.proposal.AuditProposalEvent;
 import io.nuls.contract.event.proposal.CreateProposalEvent;
+import io.nuls.contract.event.proposal.RedemptionProposalEvent;
 import io.nuls.contract.event.proposal.VoteProposalEvent;
 import io.nuls.contract.func.council.CouncilConfig;
 import io.nuls.contract.func.proposal.ProposalConstant;
@@ -49,14 +50,14 @@ import static io.nuls.contract.sdk.Utils.require;
  */
 public class ProposalVoteImpl implements ProposalVote {
 
-    protected Map<Long, Proposal> proposals = new HashMap<>();
+    protected Map<Integer, Proposal> proposals = new HashMap<>();
     /**
      * K:提案id, V:Map(K:投票人; V:投票结果)
      */
-    protected Map<Long, Map<Address, Integer>> voteRecords = new HashMap<>();
+    protected Map<Integer, Map<Address, Integer>> voteRecords = new HashMap<>();
 
     @Override
-    public Proposal getProposal(long id){
+    public Proposal getProposal(int id){
         Proposal proposal = proposals.get(id);
         require(null != proposal, "The proposal is nou exist");
         return proposal;
@@ -73,15 +74,15 @@ public class ProposalVoteImpl implements ProposalVote {
         BigInteger value = Msg.value();
         require(value.compareTo(ProposalConstant.RECOGNIZANCE) >= 0, "value need greater than " + ProposalConstant.RECOGNIZANCE);
 
-        Long proposalId = Long.valueOf(proposals.size() + 1);
+        int proposalId = proposals.size() + 1;
         Proposal proposal = new Proposal(proposalId, name, type, desc, email, Msg.sender());
         proposals.put(proposalId, proposal);
-        emit(new CreateProposalEvent(proposalId, name, type, desc, email));
+        emit(new CreateProposalEvent(proposalId, name, type, desc, email, Msg.sender().toString()));
         return proposal;
     }
 
     @Override
-    public boolean voteProposal(long proposalId, int voteOptionId) {
+    public boolean voteProposal(int proposalId, int voteOptionId) {
         require(proposalId > 0L, "Option id error");
         require(voteOptionId == ProposalConstant.FAVOUR || voteOptionId == ProposalConstant.AGAINST
                 || voteOptionId == ProposalConstant.ABSTENTION,"The vote option is wrong, please check.");
@@ -107,7 +108,7 @@ public class ProposalVoteImpl implements ProposalVote {
     }
 
     @Override
-    public void auditProposal(long proposalId, int auditOptionId, String reason) {
+    public void auditProposal(int proposalId, int auditOptionId, String reason) {
         require(proposalId > 0L, "Proposal id error, please check.");
         require(auditOptionId == ProposalConstant.YES || auditOptionId == ProposalConstant.NO, "audit option id error, please check.");
         /**
@@ -128,19 +129,23 @@ public class ProposalVoteImpl implements ProposalVote {
             long start = Block.timestamp();
             ProposalConfig proposalConfig = new ProposalConfig(start, start + ProposalConstant.DAY15_SECONDS);
             proposal.setConfig(proposalConfig);
+            emit(new AuditProposalEvent(proposalId, address, auditOptionId, reason, (byte) ProposalConstant.VOTING, start, start + ProposalConstant.DAY15_SECONDS));
         }else {
             //审核时， 拒绝后记录结果，满理事会成员总数，则表示提案最终被拒接
             auditRefuseRecords.put(address, reason);
+            Byte proposalStatus = null;
             if (auditRefuseRecords.size() == CouncilConfig.COUNCIL_MEMBERS) {
                 proposal.setStatus(ProposalConstant.UNAPPROVED);
+                proposalStatus = ProposalConstant.UNAPPROVED;
             }
+            emit(new AuditProposalEvent(proposalId, address, auditOptionId, reason, proposalStatus));
         }
-        emit(new AuditProposalEvent(proposalId, address, auditOptionId, reason));
+
     }
 
 
     @Override
-    public boolean redemption(long proposalId) {
+    public boolean redemption(int proposalId) {
         require(proposalId > 0L, "Proposal id error, please check.");
         Proposal proposal = proposals.get(proposalId);
         require(null != proposal, "Proposal is not exist, please check.");
@@ -154,10 +159,11 @@ public class ProposalVoteImpl implements ProposalVote {
         // return amount
         proposal.getOwner().transfer(ProposalConstant.RECOGNIZANCE);
         proposal.setRecognizanceRedeemed(true);
+        emit(new RedemptionProposalEvent(proposalId, proposal.getOwner().toString()));
         return true;
     }
 
-    private boolean canVote(long proposalId){
+    private boolean canVote(int proposalId){
         /**
          * 是否有该提案
          * 该提案是否可以投票(状态，时间段)

@@ -32,25 +32,27 @@ import io.nuls.contract.sdk.Event;
  */
 public class CreateProposalEvent implements Event {
 
-    private Long id;
+    private int id;
     private String name;
     private int type;
     private String desc;
     private String email;
+    private String owner;
 
-    public CreateProposalEvent(Long id, String name, int type, String desc, String email) {
+    public CreateProposalEvent(int id, String name, int type, String desc, String email, String owner) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.desc = desc;
         this.email = email;
+        this.owner = owner;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -84,5 +86,13 @@ public class CreateProposalEvent implements Event {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }
