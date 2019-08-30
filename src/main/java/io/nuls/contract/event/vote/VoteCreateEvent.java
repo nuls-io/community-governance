@@ -3,6 +3,7 @@ package io.nuls.contract.event.vote;
 import io.nuls.contract.model.vote.VoteItem;
 import io.nuls.contract.sdk.Event;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public class VoteCreateEvent implements Event {
@@ -10,12 +11,19 @@ public class VoteCreateEvent implements Event {
     private Long voteId;
     private String title;
     private String desc;
+    private int status;
+    private String owner;
+    private BigInteger recognizance;
     private List<VoteItem> items;
 
-    public VoteCreateEvent(Long voteId, String title, String desc, List<VoteItem> items) {
+
+    public VoteCreateEvent(Long voteId, String title, String desc, int status, String owner, BigInteger recognizance, List<VoteItem> items) {
         this.voteId = voteId;
         this.title = title;
         this.desc = desc;
+        this.status = status;
+        this.owner = owner;
+        this.recognizance = recognizance;
         this.items = items;
     }
 
@@ -43,43 +51,35 @@ public class VoteCreateEvent implements Event {
         this.desc = desc;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public BigInteger getRecognizance() {
+        return recognizance;
+    }
+
+    public void setRecognizance(BigInteger recognizance) {
+        this.recognizance = recognizance;
+    }
+
     public List<VoteItem> getItems() {
         return items;
     }
 
     public void setItems(List<VoteItem> items) {
         this.items = items;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        VoteCreateEvent that = (VoteCreateEvent) o;
-
-        if (voteId != null ? !voteId.equals(that.voteId) : that.voteId != null) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (desc != null ? !desc.equals(that.desc) : that.desc != null) return false;
-        return items != null ? items.equals(that.items) : that.items == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = voteId != null ? voteId.hashCode() : 0;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (desc != null ? desc.hashCode() : 0);
-        result = 31 * result + (items != null ? items.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "\"voteId\": " + voteId +
-                ", \"title\": \"" + title + "\"" +
-                ", \"desc\": \"" + desc + "\"" +
-                ", \"items\": " + items +
-                "}";
     }
 }

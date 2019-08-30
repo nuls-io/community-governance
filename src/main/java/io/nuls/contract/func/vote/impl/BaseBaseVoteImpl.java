@@ -66,7 +66,7 @@ public class BaseBaseVoteImpl implements BaseVote {
 
         votes.put(voteId, voteEntity);
 
-        emit(new VoteCreateEvent(voteId, title, desc, itemList));
+        emit(new VoteCreateEvent(voteId, title, desc, VoteStatus.STATUS_WAIT_INIT, Msg.sender().toString(), value, itemList));
 
         return voteEntity;
     }
