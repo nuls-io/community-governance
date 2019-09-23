@@ -45,7 +45,6 @@ import static io.nuls.contract.sdk.Utils.require;
  */
 public class CouncilVoteImpl implements CouncilVote {
 
-
     protected Map<String, Applicant> allApplicants = new HashMap<String, Applicant>();
 
     /**

@@ -31,6 +31,7 @@ import io.nuls.contract.event.proxy.SetAgentEvent;
 import io.nuls.contract.func.proxy.ProxyAgent;
 import io.nuls.contract.model.proxy.Mandator;
 import io.nuls.contract.sdk.Msg;
+import io.nuls.core.model.StringUtils;
 
 import java.util.*;
 
@@ -165,7 +166,7 @@ public class ProxyAgentImpl implements ProxyAgent {
 
     @Override
     public String getAgent(String mandatorAddress) {
-//        require(null != mandatorAddress, "address can not empty");
+        require(null != mandatorAddress, "address can not empty");
         if(null == mandatorAddress){
             mandatorAddress = Msg.sender().toString();
         }
@@ -179,7 +180,7 @@ public class ProxyAgentImpl implements ProxyAgent {
 
     @Override
     public Set<String> getMandators(String agentAddress) {
-//        require(null != agentAddress, "Agent address can not empty");
+        require(null != agentAddress, "Agent address can not empty");
         if(null == agentAddress){
             agentAddress = Msg.sender().toString();
         }
@@ -187,6 +188,18 @@ public class ProxyAgentImpl implements ProxyAgent {
         return mandatorSet == null ? new HashSet<>(): mandatorSet;
     }
 
+    @Override
+    public boolean suffrage(String address) {
+        //如果该地址已设置代理并且没有其他地址委托,则不能投票, 否则可以参与合约的各项投票.
+        String agent = getAgent(address);
+        if(StringUtils.isNotBlank(agent)) {
+            Set<String> mandatorSet = getMandators(address);
+            if(mandatorSet.isEmpty()){
+                return false;
+            }
+        }
+        return true;
+    }
 
     private void removeMandatorFromAgents(String agentAddress, String mandatorAddress){
         Set<String> set = agents.get(agentAddress);

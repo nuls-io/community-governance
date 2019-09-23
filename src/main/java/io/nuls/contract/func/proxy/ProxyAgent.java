@@ -76,4 +76,12 @@ public interface ProxyAgent {
      */
     Set<String> getMandators(String agentAddress);
 
+    /**
+     *  判断一个地址是否可以投票
+     *  如果该地址已设置代理并且没有其他地址委托,则不能投票, 否则可以参与合约的各项投票.
+     * @param address
+     * @return true 可以调用合约投票 false 不可以
+     */
+    boolean suffrage(String address);
+
 }

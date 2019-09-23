@@ -59,10 +59,12 @@ public interface ProposalConstant {
     int UNAPPROVED = 2;
     /** 投票中*/
     int VOTING = 3;
-//    /** 通过*/
-//    int ADOPTED = 4;
-//    /** 未通过*/
-//    int REJECTED = 5;
+    /** 通过, 执行中*/
+    int ADOPTED = 4;
+    /** 未通过*/
+    int REJECTED = 5;
+
+    int COMPLETED = 6;
 
     /** 押金100NULS*/
     BigInteger RECOGNIZANCE = new BigInteger("10000000000");

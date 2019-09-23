@@ -70,6 +70,8 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
 //    }
 
     public boolean vote(@Required long voteId, @Required long[] itemIds) {
+        //验证票权
+        require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
         return baseVote.vote(voteId, itemIds);
     }
 
@@ -175,6 +177,8 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * 给理事投票
      */
     public boolean voteDirector(@Required String[] addresses){
+        //验证票权
+        require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
         return councilVote.voteDirector(addresses);
     }
     /**
@@ -230,6 +234,8 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * @return
      */
     public boolean voteProposal(@Required int proposalId, @Required int voteOptionId){
+        //验证票权
+        require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
         return proposalVote.voteProposal(proposalId, voteOptionId);
     }
 
@@ -252,5 +258,19 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      */
     public boolean redemptionProposal(@Required int proposalId){
         return proposalVote.redemption(proposalId);
+    }
+
+    /**
+     * 将执行中的提案设置为已完成状态, 只能由现任理事会成员来执行
+     * @param proposalId
+     * @return
+     */
+    public boolean setProposalCompleted(int proposalId){
+        /**
+         * 是否是理事
+         */
+        String address = Msg.sender().toString();
+        require(councilVote.isCouncilMember(address), "Permission Denied");
+        return proposalVote.setProposalCompleted(proposalId);
     }
 }

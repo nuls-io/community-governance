@@ -24,10 +24,7 @@
 
 package io.nuls.contract.func.proposal.impl;
 
-import io.nuls.contract.event.proposal.AuditProposalEvent;
-import io.nuls.contract.event.proposal.CreateProposalEvent;
-import io.nuls.contract.event.proposal.RedemptionProposalEvent;
-import io.nuls.contract.event.proposal.VoteProposalEvent;
+import io.nuls.contract.event.proposal.*;
 import io.nuls.contract.func.council.CouncilConfig;
 import io.nuls.contract.func.proposal.ProposalConstant;
 import io.nuls.contract.func.proposal.ProposalVote;
@@ -160,6 +157,20 @@ public class ProposalVoteImpl implements ProposalVote {
         proposal.getOwner().transfer(ProposalConstant.RECOGNIZANCE);
         proposal.setRecognizanceRedeemed(true);
         emit(new RedemptionProposalEvent(proposalId, proposal.getOwner().toString()));
+        return true;
+    }
+
+    @Override
+    public boolean setProposalCompleted(int proposalId) {
+        require(proposalId > 0L, "Proposal id error, please check.");
+        Proposal proposal = proposals.get(proposalId);
+        require(null != proposal, "Proposal is not exist, please check.");
+        if(proposal.getStatus() == ProposalConstant.VOTING){
+            require(!canVote(proposalId), "current proposal vote is not over yet!");
+        }
+        proposal.setStatus(ProposalConstant.COMPLETED);
+        //事件
+        emit(new StatusCompletedProposalEvent(proposalId));
         return true;
     }
 

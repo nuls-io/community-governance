@@ -7,10 +7,12 @@ import java.util.List;
 public class VoteEvent implements Event {
 
     private Long voteId;
+    private String voterAddress;
     private List<Long> itemIds;
 
-    public VoteEvent(Long voteId, List<Long> itemIds) {
+    public VoteEvent(Long voteId, String voterAddress, List<Long> itemIds) {
         this.voteId = voteId;
+        this.voterAddress = voterAddress;
         this.itemIds = itemIds;
     }
 
@@ -18,39 +20,23 @@ public class VoteEvent implements Event {
         return voteId;
     }
 
+    public void setVoteId(Long voteId) {
+        this.voteId = voteId;
+    }
+
+    public String getVoterAddress() {
+        return voterAddress;
+    }
+
+    public void setVoterAddress(String voterAddress) {
+        this.voterAddress = voterAddress;
+    }
+
     public List<Long> getItemIds() {
         return itemIds;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        VoteEvent voteEvent = (VoteEvent) o;
-
-        if (voteId != null ? !voteId.equals(voteEvent.voteId) : voteEvent.voteId != null) {
-            return false;
-        }
-        return itemIds != null ? itemIds.equals(voteEvent.itemIds) : voteEvent.itemIds == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = voteId != null ? voteId.hashCode() : 0;
-        result = 31 * result + (itemIds != null ? itemIds.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "\"voteId\": " + voteId +
-                ", \"itemIds\": " + itemIds +
-                "}";
+    public void setItemIds(List<Long> itemIds) {
+        this.itemIds = itemIds;
     }
 }

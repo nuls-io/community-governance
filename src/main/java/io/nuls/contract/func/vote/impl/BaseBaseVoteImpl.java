@@ -1,5 +1,6 @@
 package io.nuls.contract.func.vote.impl;
 
+import io.nuls.contract.event.vote.RedemptionVoteEvent;
 import io.nuls.contract.event.vote.VoteCreateEvent;
 import io.nuls.contract.event.vote.VoteEvent;
 import io.nuls.contract.event.vote.VoteInitEvent;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import static io.nuls.contract.sdk.Utils.emit;
 import static io.nuls.contract.sdk.Utils.require;
 
@@ -152,7 +154,7 @@ public class BaseBaseVoteImpl implements BaseVote {
 
         records.put(Msg.sender(), itemIdList);
 
-        emit(new VoteEvent(voteId, itemIdList));
+        emit(new VoteEvent(voteId, Msg.sender().toString(), itemIdList));
 
         return true;
     }
@@ -178,12 +180,10 @@ public class BaseBaseVoteImpl implements BaseVote {
         BigInteger balance = Msg.address().balance();
         require(balance.compareTo(voteEntity.getRecognizance()) >= 0, "The contract balance is less than the recognizance amount");
 
-
         // return amount
         voteEntity.getOwner().transfer(voteEntity.getRecognizance());
-
         voteEntity.setRecognizance(BigInteger.ZERO);
-
+        emit(new RedemptionVoteEvent(voteId, voteEntity.getOwner().toString()));
         return true;
     }
 

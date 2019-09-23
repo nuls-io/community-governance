@@ -22,30 +22,29 @@
  * SOFTWARE.
  */
 
-package io.nuls.contract.event.proposal;
-
+package io.nuls.contract.event.vote;
 
 import io.nuls.contract.sdk.Event;
 
 /**
  * @author: Charlie
- * @date: 2019/8/26
+ * @date: 2019/9/20
  */
-public class RedemptionProposalEvent implements Event {
-    private int proposalId;
+public class RedemptionVoteEvent implements Event {
+    private long voteId;
     private String address;
 
-    public RedemptionProposalEvent(int proposalId, String address) {
-        this.proposalId = proposalId;
+    public RedemptionVoteEvent(long voteId, String address) {
+        this.voteId = voteId;
         this.address = address;
     }
 
-    public int getProposalId() {
-        return proposalId;
+    public long getVoteId() {
+        return voteId;
     }
 
-    public void setProposalId(int proposalId) {
-        this.proposalId = proposalId;
+    public void setVoteId(long voteId) {
+        this.voteId = voteId;
     }
 
     public String getAddress() {
