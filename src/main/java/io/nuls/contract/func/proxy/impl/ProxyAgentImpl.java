@@ -54,11 +54,17 @@ public class ProxyAgentImpl implements ProxyAgent {
         Mandator mandatorAgentAddress = mandators.get(agentAddress);
         if(null != mandatorAgentAddress) {
             require(!mandatorAgentAddress.getCloseAgent(), "This address does not accept proxy agent");
+            //如果待设置的代理已经有代理人了就不能成为代理人
+            require(null == mandatorAgentAddress.getAgentAddress(), "The agent address has an agent");
         }
         Mandator mandatorSender = mandators.get(Msg.sender().toString());
         if(null == mandatorSender){
             mandatorSender = new Mandator(Msg.sender().toString(), agentAddress, false);
         }else{
+            //设置者 不能是其他地址的代理人
+            Set<String> mandatorSet = getMandators(Msg.sender().toString());
+            require(!mandatorSet.isEmpty(), "The sender address is an agent");
+            //设置者 必须没有设置过代理人
             require(null == mandatorSender.getAgentAddress(), "The address has an agent");
             mandatorSender.setAgentAddress(agentAddress);
         }
@@ -83,6 +89,8 @@ public class ProxyAgentImpl implements ProxyAgent {
         Mandator mandatorAgentAddress = mandators.get(agentAddress);
         if(null != mandatorAgentAddress) {
             require(!mandatorAgentAddress.getCloseAgent(), "This address does not accept proxy agent");
+            //如果待设置的代理已经有代理人了就不能成为代理人
+            require(null == mandatorAgentAddress.getAgentAddress(), "The agent address has an agent");
         }
         Mandator mandatorSender = mandators.get(Msg.sender().toString());
         String oldAgentAddress = mandatorSender.getAgentAddress();
