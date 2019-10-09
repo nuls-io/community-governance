@@ -31,9 +31,11 @@ import io.nuls.contract.event.proxy.SetAgentEvent;
 import io.nuls.contract.func.proxy.ProxyAgent;
 import io.nuls.contract.model.proxy.Mandator;
 import io.nuls.contract.sdk.Msg;
-import io.nuls.core.model.StringUtils;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static io.nuls.contract.sdk.Utils.emit;
 import static io.nuls.contract.sdk.Utils.require;
@@ -200,7 +202,7 @@ public class ProxyAgentImpl implements ProxyAgent {
     public boolean suffrage(String address) {
         //如果该地址已设置代理并且没有其他地址委托,则不能投票, 否则可以参与合约的各项投票.
         String agent = getAgent(address);
-        if(StringUtils.isNotBlank(agent)) {
+        if(null == agent || agent.trim().length() == 0) {
             Set<String> mandatorSet = getMandators(address);
             if(mandatorSet.isEmpty()){
                 return false;
