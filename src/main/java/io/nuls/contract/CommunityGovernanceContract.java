@@ -39,7 +39,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
 
     private ProposalVote proposalVote;
 
-    public CommunityGovernanceContract(@Required long minRecognizance) {
+    public CommunityGovernanceContract(@Required BigInteger recognizance) {
         //票权委托
         proxyAgent = new ProxyAgentImpl();
         //理事会选举
@@ -47,7 +47,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
         //提案
         proposalVote = new ProposalVoteImpl();
         //投票
-        baseVote = new BaseBaseVoteImpl(BigInteger.valueOf(minRecognizance));
+        baseVote = new BaseBaseVoteImpl();
 
     }
 
@@ -182,6 +182,27 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
         return councilVote.voteDirector(addresses);
     }
     /**
+     * 对单个理事投票
+     * @param address
+     * @return
+     */
+    public boolean voteOneDirector(@Required String address){
+        require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
+        return councilVote.voteOneDirector(address);
+    }
+
+    /**
+     * 取消对单个理事的投票
+     * @param address
+     * @return
+     */
+    public boolean cancelVoteOneDirector(@Required String address){
+        require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
+        return councilVote.cancelVoteOneDirector(address);
+    }
+
+
+    /**
      * 移除一个候选人
      */
     public boolean removeApplicant(@Required String address){
@@ -256,9 +277,9 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
     /**
      * 退还押金
      */
-    public boolean redemptionProposal(@Required int proposalId){
+/*    public boolean redemptionProposal(@Required int proposalId){
         return proposalVote.redemption(proposalId);
-    }
+    }*/
 
     /**
      * 将执行中的提案设置为已完成状态, 只能由现任理事会成员来执行

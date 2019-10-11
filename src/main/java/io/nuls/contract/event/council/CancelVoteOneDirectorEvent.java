@@ -22,47 +22,43 @@
  * SOFTWARE.
  */
 
-package io.nuls.contract.func.proposal;
+package io.nuls.contract.event.council;
+
+import io.nuls.contract.sdk.Event;
 
 /**
  * @author: Charlie
- * @date: 2019/8/15
+ * @date: 2019/10/10
  */
-public interface ProposalConstant {
+public class CancelVoteOneDirectorEvent implements Event {
+    /**
+     * 投票人
+     */
+    private String voterAddress;
 
-    /** 角色*/
-    int ROLE = 1;
-    /** 系统参数*/
-    int SYS_PARAM = 2;
-    /** 社区基金*/
-    int COMMUNITY_FUND = 3;
-    /** 其他类型*/
-    int OTHER_TYPE = 4;
+    /**
+     * 所投的选项(理事候选人)
+     */
+    private String applicantAddress;
 
-    /** 支持*/
-    int FAVOUR = 1;
-    /** 反对*/
-    int AGAINST = 2;
-    /** 弃权*/
-    int ABSTENTION  = 3;
+    public CancelVoteOneDirectorEvent(String voterAddress, String applicantAddress) {
+        this.voterAddress = voterAddress;
+        this.applicantAddress = applicantAddress;
+    }
 
-    /** 审核通过*/
-    int YES = 1;
-    /** 审核拒绝*/
-    int NO = 0;
+    public String getVoterAddress() {
+        return voterAddress;
+    }
 
-    /** 审核中*/
-    int INREVIEW = 1;
-    /** 审核拒绝*/
-    int UNAPPROVED = 2;
-    /** 投票中*/
-    int VOTING = 3;
-    /** 通过, 执行中*/
-    int ADOPTED = 4;
-    /** 未通过*/
-    int REJECTED = 5;
+    public void setVoterAddress(String voterAddress) {
+        this.voterAddress = voterAddress;
+    }
 
-    int COMPLETED = 6;
+    public String getApplicantAddress() {
+        return applicantAddress;
+    }
 
-    long DAY15_SECONDS = 86400 * 15;
+    public void setApplicantAddress(String applicantAddress) {
+        this.applicantAddress = applicantAddress;
+    }
 }

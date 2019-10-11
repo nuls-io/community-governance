@@ -65,7 +65,7 @@ public class ProxyAgentImpl implements ProxyAgent {
         }else{
             //设置者 不能是其他地址的代理人
             Set<String> mandatorSet = getMandators(Msg.sender().toString());
-            require(!mandatorSet.isEmpty(), "The sender address is an agent");
+            require(mandatorSet.isEmpty(), "The sender address is an agent");
             //设置者 必须没有设置过代理人
             require(null == mandatorSender.getAgentAddress(), "The address has an agent");
             mandatorSender.setAgentAddress(agentAddress);
@@ -176,7 +176,7 @@ public class ProxyAgentImpl implements ProxyAgent {
 
     @Override
     public String getAgent(String mandatorAddress) {
-        require(null != mandatorAddress, "address can not empty");
+        //require(null != mandatorAddress, "address can not empty");
         if(null == mandatorAddress){
             mandatorAddress = Msg.sender().toString();
         }
@@ -190,7 +190,7 @@ public class ProxyAgentImpl implements ProxyAgent {
 
     @Override
     public Set<String> getMandators(String agentAddress) {
-        require(null != agentAddress, "Agent address can not empty");
+        //require(null != agentAddress, "Agent address can not empty");
         if(null == agentAddress){
             agentAddress = Msg.sender().toString();
         }
@@ -200,13 +200,10 @@ public class ProxyAgentImpl implements ProxyAgent {
 
     @Override
     public boolean suffrage(String address) {
-        //如果该地址已设置代理并且没有其他地址委托,则不能投票, 否则可以参与合约的各项投票.
+        //如果该地址已设置代理,则不能投票, 否则可以参与合约的各项投票.
         String agent = getAgent(address);
-        if(null == agent || agent.trim().length() == 0) {
-            Set<String> mandatorSet = getMandators(address);
-            if(mandatorSet.isEmpty()){
-                return false;
-            }
+        if(null != agent) {
+            return false;
         }
         return true;
     }

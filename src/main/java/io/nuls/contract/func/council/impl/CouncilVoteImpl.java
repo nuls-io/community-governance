@@ -25,6 +25,7 @@
 package io.nuls.contract.func.council.impl;
 
 import io.nuls.contract.event.council.*;
+import io.nuls.contract.event.council.CancelVoteOneDirectorEvent;
 import io.nuls.contract.func.council.CouncilConfig;
 import io.nuls.contract.func.council.CouncilVote;
 import io.nuls.contract.model.council.Applicant;
@@ -45,6 +46,9 @@ import static io.nuls.contract.sdk.Utils.require;
  */
 public class CouncilVoteImpl implements CouncilVote {
 
+    /**
+     * 所有申请人
+     */
     protected Map<String, Applicant> allApplicants = new HashMap<String, Applicant>();
 
     /**
@@ -52,6 +56,9 @@ public class CouncilVoteImpl implements CouncilVote {
      */
     protected Map<String, Set<String>> votes = new HashMap<String, Set<String>>();
 
+    /**
+     * 理事
+     */
     protected Map<String, Applicant> councilMember = new HashMap<>(CouncilConfig.COUNCIL_MEMBERS);
 
 
@@ -119,6 +126,42 @@ public class CouncilVoteImpl implements CouncilVote {
         }
         emit(new VoteDirectorEvent(voter, addresses));
         return true;
+    }
+
+    @Override
+    public boolean voteOneDirector(String address) {
+        require(address != null, "address can not empty");
+        require(allApplicants.containsKey(address), address + "is not a applicant's address and cannot be voted on");
+        String voter = Msg.sender().toString();
+        //是否已投11个
+        int voted = 0;
+        for(Set<String> set : votes.values()){
+            if(set.contains(voter)){
+                voted++;
+            }
+        }
+        require(voted < CouncilConfig.COUNCIL_MEMBERS, "The number of voting addresses must be between 1 and 11");
+
+        Set<String> addressSet = votes.get(address);
+        if(null == addressSet){
+            addressSet = new HashSet<>();
+        }
+        require(!addressSet.contains(voter), "The address was voted");
+        addressSet.add(voter);
+        votes.put(address, addressSet);
+        emit(new VoteOneDirectorEvent(voter, address));
+        return true;
+    }
+
+    @Override
+    public boolean cancelVoteOneDirector(String address) {
+        require(address != null, "address can not empty");
+        String voter = Msg.sender().toString();
+        Set<String> addressSet = votes.get(address);
+        require(null != addressSet && addressSet.contains(voter), "The address is not voted");
+        addressSet.remove(voter);
+        emit(new CancelVoteOneDirectorEvent(voter, address));
+        return false;
     }
 
     @Override

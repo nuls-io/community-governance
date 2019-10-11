@@ -24,7 +24,10 @@
 
 package io.nuls.contract.func.proposal.impl;
 
-import io.nuls.contract.event.proposal.*;
+import io.nuls.contract.event.proposal.AuditProposalEvent;
+import io.nuls.contract.event.proposal.CreateProposalEvent;
+import io.nuls.contract.event.proposal.StatusCompletedProposalEvent;
+import io.nuls.contract.event.proposal.VoteProposalEvent;
 import io.nuls.contract.func.council.CouncilConfig;
 import io.nuls.contract.func.proposal.ProposalConstant;
 import io.nuls.contract.func.proposal.ProposalVote;
@@ -34,7 +37,6 @@ import io.nuls.contract.sdk.Address;
 import io.nuls.contract.sdk.Block;
 import io.nuls.contract.sdk.Msg;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,8 +70,8 @@ public class ProposalVoteImpl implements ProposalVote {
         require(null != desc, "desc can not empty");
         require(null != email, "email can not empty");
 
-        BigInteger value = Msg.value();
-        require(value.compareTo(ProposalConstant.RECOGNIZANCE) >= 0, "value need greater than " + ProposalConstant.RECOGNIZANCE);
+        /*BigInteger value = Msg.value();
+        require(value.compareTo(ProposalConstant.RECOGNIZANCE) >= 0, "value need greater than " + ProposalConstant.RECOGNIZANCE);*/
 
         int proposalId = proposals.size() + 1;
         Proposal proposal = new Proposal(proposalId, name, type, desc, email, Msg.sender());
@@ -141,7 +143,7 @@ public class ProposalVoteImpl implements ProposalVote {
     }
 
 
-    @Override
+/*    @Override
     public boolean redemption(int proposalId) {
         require(proposalId > 0L, "Proposal id error, please check.");
         Proposal proposal = proposals.get(proposalId);
@@ -158,7 +160,7 @@ public class ProposalVoteImpl implements ProposalVote {
         proposal.setRecognizanceRedeemed(true);
         emit(new RedemptionProposalEvent(proposalId, proposal.getOwner().toString()));
         return true;
-    }
+    }*/
 
     @Override
     public boolean setProposalCompleted(int proposalId) {

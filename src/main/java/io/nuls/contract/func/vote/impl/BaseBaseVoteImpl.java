@@ -24,15 +24,10 @@ import static io.nuls.contract.sdk.Utils.require;
 
 public class BaseBaseVoteImpl implements BaseVote {
 
-    private BigInteger minRecognizance;
+    private static final BigInteger RECOGNIZANCE = new BigInteger("1000000000");
 
     protected Map<Long, VoteEntity> votes = new HashMap<Long, VoteEntity>();
     protected Map<Long, Map<Address, List<Long>>> voteRecords = new HashMap<Long, Map<Address, List<Long>>>();
-
-    public BaseBaseVoteImpl(BigInteger minRecognizance) {
-        require(minRecognizance.compareTo(BigInteger.valueOf(0)) > 0, "minRecognizance need greater than zero");
-        this.minRecognizance = minRecognizance;
-    }
 
     @Override
     public VoteEntity create(String title, String desc, String[] items) {
@@ -42,7 +37,7 @@ public class BaseBaseVoteImpl implements BaseVote {
         require(desc != null, "desc can not empty");
 
         BigInteger value = Msg.value();
-        require(value.compareTo(minRecognizance) >= 0, "value need greater than " + minRecognizance);
+        require(value.compareTo(RECOGNIZANCE) >= 0, "value need greater than " + RECOGNIZANCE);
 
         Long voteId = Long.valueOf(votes.size() + 1);
 

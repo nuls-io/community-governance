@@ -58,6 +58,20 @@ public interface CouncilVote {
     boolean voteDirector(String[] addresses);
 
     /**
+     * 对单个理事投票
+     * @param address
+     * @return
+     */
+    boolean voteOneDirector(String address);
+
+    /**
+     * 取消对单个理事的投票
+     * @param address
+     * @return
+     */
+    boolean cancelVoteOneDirector(String address);
+
+    /**
      * 移除一个候选人
      * @param address
      * @return
