@@ -22,7 +22,6 @@ import io.nuls.contract.sdk.annotation.Payable;
 import io.nuls.contract.sdk.annotation.Required;
 import io.nuls.contract.sdk.annotation.View;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +38,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
 
     private ProposalVote proposalVote;
 
-    public CommunityGovernanceContract(@Required BigInteger recognizance) {
+    public CommunityGovernanceContract() {
         //票权委托
         proxyAgent = new ProxyAgentImpl();
         //理事会选举

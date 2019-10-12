@@ -98,11 +98,27 @@ public class CouncilVoteImpl implements CouncilVote {
 
     @Override
     public boolean removeApplicant(String address) {
+        /**
+         * 直接移除理事申请人所有数据,不论是否已经成为理事
+         */
         require(null != address, "address can not empty");
         require(allApplicants.containsKey(address), "The applicant does not exist");
         allApplicants.remove(address);
+        councilMember.remove(address);
         votes.remove(address);
         emit(new RemoveApplicantEvent(address));
+        return true;
+    }
+
+    @Override
+    public boolean removeDirector(String address) {
+        /**
+         * 仅撤销理事身份, 符合条件仍然是申请者 保留投票记录
+         */
+        require(null != address, "address can not empty");
+        require(councilMember.containsKey(address), "The director does not exist");
+        councilMember.remove(address);
+        emit(new RemoveDirectorEvent(address));
         return true;
     }
 
@@ -172,16 +188,6 @@ public class CouncilVoteImpl implements CouncilVote {
         require(null != applicant, "The address did not apply to the director");
         councilMember.put(applicant.getAddress(), applicant);
         emit(new AddDirectorEvent(address));
-        return true;
-    }
-
-    @Override
-    public boolean removeDirector(String address) {
-        require(null != address, "address can not empty");
-        require(councilMember.containsKey(address), "The director does not exist");
-        councilMember.remove(address);
-        votes.remove(address);
-        emit(new RemoveDirectorEvent(address));
         return true;
     }
 
