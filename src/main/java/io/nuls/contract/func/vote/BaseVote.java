@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface BaseVote {
 
-    VoteEntity create(String title, String desc, String[] items);
+    VoteEntity create(String title, String desc, String[] items, Integer proposalId);
 
     boolean init(long voteId, VoteConfig config);
 

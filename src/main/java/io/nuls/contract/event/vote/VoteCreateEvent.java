@@ -15,9 +15,9 @@ public class VoteCreateEvent implements Event {
     private String owner;
     private BigInteger recognizance;
     private List<VoteItem> items;
+    private Integer proposalId;
 
-
-    public VoteCreateEvent(Long voteId, String title, String desc, int status, String owner, BigInteger recognizance, List<VoteItem> items) {
+    public VoteCreateEvent(Long voteId, String title, String desc, int status, String owner, BigInteger recognizance, List<VoteItem> items, Integer proposalId) {
         this.voteId = voteId;
         this.title = title;
         this.desc = desc;
@@ -25,6 +25,7 @@ public class VoteCreateEvent implements Event {
         this.owner = owner;
         this.recognizance = recognizance;
         this.items = items;
+        this.proposalId = proposalId;
     }
 
     public Long getVoteId() {
@@ -81,5 +82,13 @@ public class VoteCreateEvent implements Event {
 
     public void setItems(List<VoteItem> items) {
         this.items = items;
+    }
+
+    public Integer getProposalId() {
+        return proposalId;
+    }
+
+    public void setProposalId(Integer proposalId) {
+        this.proposalId = proposalId;
     }
 }

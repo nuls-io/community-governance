@@ -52,10 +52,11 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
 
     @Payable
     public VoteEntity createBaseVote(@Required String title, @Required String desc, @Required String[] items, @Required long startTime, @Required long endTime,
-                                     @Required boolean isMultipleSelect, @Required int minSelectCount, @Required int maxSelectCount, @Required boolean voteCanModify) {
-        VoteEntity voteEntity = baseVote.create(title, desc, items);
+                                     @Required boolean isMultipleSelect, @Required int minSelectCount, @Required int maxSelectCount, @Required boolean voteCanModify, Integer proposalId) {
+        VoteEntity voteEntity = baseVote.create(title, desc, items, proposalId);
 
         VoteConfig config = new VoteConfig(startTime, endTime, isMultipleSelect, minSelectCount, maxSelectCount, voteCanModify);
+
         boolean success = baseVote.init(voteEntity.getId(), config);
 
         Utils.require(success, "vote init fail");

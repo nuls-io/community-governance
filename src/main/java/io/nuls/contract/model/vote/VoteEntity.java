@@ -15,6 +15,7 @@ public class VoteEntity {
     private Address owner;
     private BigInteger recognizance;
     private List<VoteItem> items;
+    private Integer proposalId;
 
     public Long getId() {
         return id;
@@ -80,65 +81,11 @@ public class VoteEntity {
         this.recognizance = recognizance;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        VoteEntity that = (VoteEntity) o;
-
-        if (status != that.status) {
-            return false;
-        }
-        if (id != null ? !id.equals(that.id) : that.id != null) {
-            return false;
-        }
-        if (title != null ? !title.equals(that.title) : that.title != null) {
-            return false;
-        }
-        if (desc != null ? !desc.equals(that.desc) : that.desc != null) {
-            return false;
-        }
-        if (config != null ? !config.equals(that.config) : that.config != null) {
-            return false;
-        }
-        if (owner != null ? !owner.equals(that.owner) : that.owner != null) {
-            return false;
-        }
-        if (recognizance != null ? !recognizance.equals(that.recognizance) : that.recognizance != null) {
-            return false;
-        }
-        return items != null ? items.equals(that.items) : that.items == null;
+    public Integer getProposalId() {
+        return proposalId;
     }
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (desc != null ? desc.hashCode() : 0);
-        result = 31 * result + (config != null ? config.hashCode() : 0);
-        result = 31 * result + status;
-        result = 31 * result + (owner != null ? owner.hashCode() : 0);
-        result = 31 * result + (recognizance != null ? recognizance.hashCode() : 0);
-        result = 31 * result + (items != null ? items.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "\"id\": " + id +
-                ", \"title\": \"" + title + "\"" +
-                ", \"desc\": \"" + desc + "\"" +
-                ", \"config\": " + config +
-                ", \"status\": " + status +
-                ", \"owner\": \"" + owner + "\"" +
-                ", \"recognizance\": " + recognizance +
-                ", \"items\": " + items +
-                '}';
+    public void setProposalId(Integer proposalId) {
+        this.proposalId = proposalId;
     }
 }

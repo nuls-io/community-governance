@@ -30,7 +30,7 @@ public class BaseBaseVoteImpl implements BaseVote {
     protected Map<Long, Map<Address, List<Long>>> voteRecords = new HashMap<Long, Map<Address, List<Long>>>();
 
     @Override
-    public VoteEntity create(String title, String desc, String[] items) {
+    public VoteEntity create(String title, String desc, String[] items, Integer proposalId) {
 
         require(items != null && items.length > 0, "items can not empty");
         require(title != null, "title can not empty");
@@ -47,6 +47,7 @@ public class BaseBaseVoteImpl implements BaseVote {
         voteEntity.setTitle(title);
         voteEntity.setDesc(desc);
         voteEntity.setRecognizance(value);
+        voteEntity.setProposalId(proposalId);
 
         List<VoteItem> itemList = new ArrayList<VoteItem>();
 
@@ -63,7 +64,7 @@ public class BaseBaseVoteImpl implements BaseVote {
 
         votes.put(voteId, voteEntity);
 
-        emit(new VoteCreateEvent(voteId, title, desc, VoteStatus.STATUS_WAIT_INIT, Msg.sender().toString(), value, itemList));
+        emit(new VoteCreateEvent(voteId, title, desc, VoteStatus.STATUS_WAIT_INIT, Msg.sender().toString(), value, itemList, proposalId));
 
         return voteEntity;
     }
