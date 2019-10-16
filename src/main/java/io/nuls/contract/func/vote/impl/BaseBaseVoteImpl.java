@@ -12,6 +12,8 @@ import io.nuls.contract.model.vote.VoteItem;
 import io.nuls.contract.sdk.Address;
 import io.nuls.contract.sdk.Block;
 import io.nuls.contract.sdk.Msg;
+import io.nuls.contract.sdk.Utils;
+import io.nuls.contract.sdk.event.DebugEvent;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -59,12 +61,12 @@ public class BaseBaseVoteImpl implements BaseVote {
         }
 
         voteEntity.setItems(itemList);
-        voteEntity.setStatus(VoteStatus.STATUS_WAIT_INIT);
+        voteEntity.setStatus(VoteStatus.STATUS_VOTEING);
         voteEntity.setOwner(Msg.sender());
 
         votes.put(voteId, voteEntity);
 
-        emit(new VoteCreateEvent(voteId, title, desc, VoteStatus.STATUS_WAIT_INIT, Msg.sender().toString(), value, itemList, proposalId));
+        emit(new VoteCreateEvent(voteId, title, desc, VoteStatus.STATUS_VOTEING, Msg.sender().toString(), value, itemList, proposalId));
 
         return voteEntity;
     }
@@ -83,7 +85,7 @@ public class BaseBaseVoteImpl implements BaseVote {
 
         require(voteEntity != null, "vote not find");
 
-        require(voteEntity.getStatus() == VoteStatus.STATUS_WAIT_INIT, "vote status error");
+        require(voteEntity.getStatus() == VoteStatus.STATUS_VOTEING, "vote status error");
 
         List<VoteItem> items = voteEntity.getItems();
         require(items != null && items.size() > 0, "vote item can not empty");
@@ -191,22 +193,26 @@ public class BaseBaseVoteImpl implements BaseVote {
         VoteEntity voteEntity = votes.get(voteId);
 
         if(voteEntity == null) {
+            Utils.emit(new DebugEvent("canVote", "1"));
             return false;
         }
 
         VoteConfig config = voteEntity.getConfig();
 
         if(config == null) {
+            Utils.emit(new DebugEvent("canVote", "2"));
             return false;
         }
 
-        if(config.getStartTime() > Block.timestamp() || voteEntity.getStatus() == VoteStatus.STATUS_WAIT_INIT) {
+        if(config.getStartTime() > Block.timestamp()) {
+            Utils.emit(new DebugEvent("canVote", "3"));
             return false;
         } else if(voteEntity.getStatus() == VoteStatus.STATUS_WAIT_VOTE) {
             updateStatus(voteEntity, VoteStatus.STATUS_VOTEING);
         }
 
         if(voteEntity.getStatus() != VoteStatus.STATUS_VOTEING) {
+            Utils.emit(new DebugEvent("canVote", "4"));
             return false;
         }
 
@@ -214,6 +220,7 @@ public class BaseBaseVoteImpl implements BaseVote {
             if(voteEntity.getStatus() != VoteStatus.STATUS_CLOSE) {
                 updateStatus(voteEntity, VoteStatus.STATUS_CLOSE);
             }
+            Utils.emit(new DebugEvent("canVote", "4"));
             return false;
         }
 
