@@ -220,7 +220,7 @@ public class BaseBaseVoteImpl implements BaseVote {
             if(voteEntity.getStatus() != VoteStatus.STATUS_CLOSE) {
                 updateStatus(voteEntity, VoteStatus.STATUS_CLOSE);
             }
-            Utils.emit(new DebugEvent("canVote", "4"));
+            Utils.emit(new DebugEvent("canVote", "5"));
             return false;
         }
 
