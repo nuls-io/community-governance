@@ -53,18 +53,20 @@ public class ProxyAgentImpl implements ProxyAgent {
     @Override
     public boolean setAgent(String agentAddress) {
         require(null != agentAddress, "Agent address can not empty");
+        String sender = Msg.sender().toString();
+        require(!agentAddress.equals(sender), "The agent cannot be himself");
         Mandator mandatorAgentAddress = mandators.get(agentAddress);
         if(null != mandatorAgentAddress) {
             require(!mandatorAgentAddress.getCloseAgent(), "This address does not accept proxy agent");
             //如果待设置的代理已经有代理人了就不能成为代理人
             require(null == mandatorAgentAddress.getAgentAddress(), "The agent address has an agent");
         }
-        Mandator mandatorSender = mandators.get(Msg.sender().toString());
+        Mandator mandatorSender = mandators.get(sender);
         if(null == mandatorSender){
-            mandatorSender = new Mandator(Msg.sender().toString(), agentAddress, false);
+            mandatorSender = new Mandator(sender, agentAddress, false);
         }else{
             //设置者 不能是其他地址的代理人
-            Set<String> mandatorSet = getMandators(Msg.sender().toString());
+            Set<String> mandatorSet = getMandators(sender);
             require(mandatorSet.isEmpty(), "The sender address is an agent");
             //设置者 必须没有设置过代理人
             require(null == mandatorSender.getAgentAddress(), "The address has an agent");
@@ -88,13 +90,15 @@ public class ProxyAgentImpl implements ProxyAgent {
          * 发送事件
          */
         require(null != agentAddress, "Agent address can not empty");
+        String sender = Msg.sender().toString();
+        require(!agentAddress.equals(sender), "The agent cannot be himself");
         Mandator mandatorAgentAddress = mandators.get(agentAddress);
         if(null != mandatorAgentAddress) {
             require(!mandatorAgentAddress.getCloseAgent(), "This address does not accept proxy agent");
             //如果待设置的代理已经有代理人了就不能成为代理人
             require(null == mandatorAgentAddress.getAgentAddress(), "The agent address has an agent");
         }
-        Mandator mandatorSender = mandators.get(Msg.sender().toString());
+        Mandator mandatorSender = mandators.get(sender);
         String oldAgentAddress = mandatorSender.getAgentAddress();
         require(!agentAddress.equals(oldAgentAddress),"The old and new agent addresses are the same");
         require(null != mandatorSender && null != oldAgentAddress, "The address has no agent");

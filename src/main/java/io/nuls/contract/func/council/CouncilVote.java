@@ -25,6 +25,7 @@
 package io.nuls.contract.func.council;
 
 import io.nuls.contract.model.council.Applicant;
+import io.nuls.contract.sdk.Address;
 
 import java.util.Map;
 
@@ -55,7 +56,7 @@ public interface CouncilVote {
      * @param addresses
      * @return
      */
-    boolean voteDirector(String[] addresses);
+    boolean voteDirector(Address[] addresses);
 
     /**
      * 对单个理事投票

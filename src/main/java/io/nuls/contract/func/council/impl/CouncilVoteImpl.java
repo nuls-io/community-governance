@@ -25,7 +25,6 @@
 package io.nuls.contract.func.council.impl;
 
 import io.nuls.contract.event.council.*;
-import io.nuls.contract.event.council.CancelVoteOneDirectorEvent;
 import io.nuls.contract.func.council.CouncilConfig;
 import io.nuls.contract.func.council.CouncilVote;
 import io.nuls.contract.model.council.Applicant;
@@ -123,16 +122,19 @@ public class CouncilVoteImpl implements CouncilVote {
     }
 
     @Override
-    public boolean voteDirector(String[] addresses) {
-        require(addresses != null && addresses.length > 0 && addresses.length < CouncilConfig.COUNCIL_MEMBERS, "The number of voting addresses must be between 1 and 11");
+    public boolean voteDirector(Address[] addresses) {
+        require(addresses.length < CouncilConfig.COUNCIL_MEMBERS, "The number of voting addresses must be between 0 and 11");
+
         String voter = Msg.sender().toString();
         //扫描之前的投票记录，如果该投票者投过票则先取消，再重新记录新的投票
         for(Set<String> set : votes.values()){
             set.remove(voter);
         }
+        String[] addrs = new String[addresses.length];
         for (int i = 0; i < addresses.length; i++) {
-            String address = addresses[i];
+            String address = addresses[i].toString();
             require(allApplicants.containsKey(address), address + "is not a applicant's address and cannot be voted on");
+            addrs[i] = address;
             Set<String> addressSet = votes.get(address);
             if (null == addressSet) {
                 addressSet = new HashSet<>();
@@ -140,7 +142,7 @@ public class CouncilVoteImpl implements CouncilVote {
             addressSet.add(voter);
             votes.put(address, addressSet);
         }
-        emit(new VoteDirectorEvent(voter, addresses));
+        emit(new VoteDirectorEvent(voter, addrs));
         return true;
     }
 

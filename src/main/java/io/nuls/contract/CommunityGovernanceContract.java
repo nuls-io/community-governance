@@ -105,16 +105,16 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * @param agentAddress
      * @return
      */
-    public boolean setAgent(@Required String agentAddress){
-       return proxyAgent.setAgent(agentAddress);
+    public boolean setAgent(@Required Address agentAddress){
+       return proxyAgent.setAgent(agentAddress.toString());
     }
     /**
      * 委托人更改代理地址
      * @param agentAddress
      * @return
      */
-    public boolean modifyAgent(@Required String agentAddress){
-        return proxyAgent.modifyAgent(agentAddress);
+    public boolean modifyAgent(@Required Address agentAddress){
+        return proxyAgent.modifyAgent(agentAddress.toString());
     }
     /**
      * 委托人撤销代理地址
@@ -127,8 +127,8 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * 代理人撤销委托人地址
      * @return
      */
-    public boolean revokeMandator(@Required String mandatorAddress){
-        return proxyAgent.revokeMandator(mandatorAddress);
+    public boolean revokeMandator(@Required Address mandatorAddress){
+        return proxyAgent.revokeMandator(mandatorAddress.toString());
     }
     /**
      * 账户开启不接受委托的功能
@@ -147,16 +147,16 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * @return
      */
     @View
-    public String getAgent(String mandatorAddress){
-        return proxyAgent.getAgent(mandatorAddress);
+    public String getAgent(Address mandatorAddress){
+        return proxyAgent.getAgent(mandatorAddress.toString());
     }
     /**
      * 查询代理人的委托地址列表 - view方法
      * @return
      */
     @View
-    public Set<String> getMandators(String agentAddress){
-        return proxyAgent.getMandators(agentAddress);
+    public Set<String> getMandators(Address agentAddress){
+        return proxyAgent.getMandators(agentAddress.toString());
     }
 
     /**
@@ -170,25 +170,35 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      */
     @View
     @JSONSerializable
-    public Applicant getApplicantInfo(@Required String address){
-        return councilVote.getApplicantInfo(address);
+    public Applicant getApplicantInfo(@Required Address address){
+        return councilVote.getApplicantInfo(address.toString());
     }
     /**
      * 给理事投票
      */
-    public boolean voteDirector(@Required String[] addresses){
+    public boolean voteDirector(String[] addresses){
         //验证票权
         require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
-        return councilVote.voteDirector(addresses);
+        Address[] addrs;
+        if(null != addresses) {
+            addrs = new Address[addresses.length];
+            for (int i = 0;i < addresses.length; i++) {
+                addrs[i] = new Address(addresses[i]);
+            }
+        }else {
+            addrs = new Address[0];
+        }
+
+        return councilVote.voteDirector(addrs);
     }
     /**
      * 对单个理事投票
      * @param address
      * @return
      */
-    public boolean voteOneDirector(@Required String address){
+    public boolean voteOneDirector(@Required Address address){
         require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
-        return councilVote.voteOneDirector(address);
+        return councilVote.voteOneDirector(address.toString());
     }
 
     /**
@@ -196,32 +206,32 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * @param address
      * @return
      */
-    public boolean cancelVoteOneDirector(@Required String address){
+    public boolean cancelVoteOneDirector(@Required Address address){
         require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
-        return councilVote.cancelVoteOneDirector(address);
+        return councilVote.cancelVoteOneDirector(address.toString());
     }
 
 
     /**
      * 移除一个候选人
      */
-    public boolean removeApplicant(@Required String address){
+    public boolean removeApplicant(@Required Address address){
         onlyOwner();
-        return councilVote.removeApplicant(address);
+        return councilVote.removeApplicant(address.toString());
     }
     /**
      * 添加理事
      */
-    public boolean addDirector(@Required String address){
+    public boolean addDirector(@Required Address address){
         onlyOwner();
-        return councilVote.addDirector(address);
+        return councilVote.addDirector(address.toString());
     }
     /**
      * 移除理事
      */
-    public boolean removeDirector(@Required String address){
+    public boolean removeDirector(@Required Address address){
         onlyOwner();
-        return councilVote.removeDirector(address);
+        return councilVote.removeDirector(address.toString());
     }
 
     /**
