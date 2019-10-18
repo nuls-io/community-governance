@@ -35,6 +35,7 @@ import java.util.Map;
  */
 public interface CouncilVote {
 
+    int getCurrentCouncilMemberCount();
     /**
      * 申请理事
      * @param type

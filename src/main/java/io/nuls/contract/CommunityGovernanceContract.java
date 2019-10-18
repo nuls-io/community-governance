@@ -281,7 +281,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
          */
         String address = Msg.sender().toString();
         require(councilVote.isCouncilMember(address), "Permission Denied");
-        proposalVote.auditProposal(proposalId, auditOptionId, reason);
+        proposalVote.auditProposal(proposalId, auditOptionId, reason, councilVote.getCurrentCouncilMemberCount());
     }
 
     /**

@@ -60,6 +60,10 @@ public class CouncilVoteImpl implements CouncilVote {
      */
     protected Map<String, Applicant> councilMember = new HashMap<>(CouncilConfig.COUNCIL_MEMBERS);
 
+    @Override
+    public int getCurrentCouncilMemberCount(){
+        return councilMember.size();
+    }
 
     @Override
     public boolean isCouncilMember(String address){

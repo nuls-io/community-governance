@@ -51,8 +51,9 @@ public interface ProposalVote {
      * 审核提案
      * @param proposalId 提案id
      * @param auditOptionId 审核选项 0:拒绝, 1:同意
+     * @param currentCouncilMemberCount 当前理事会成员个数
      */
-    void auditProposal(int proposalId, int auditOptionId, String reason);
+    void auditProposal(int proposalId, int auditOptionId, String reason, int currentCouncilMemberCount);
 
     /**
      * 退还押金

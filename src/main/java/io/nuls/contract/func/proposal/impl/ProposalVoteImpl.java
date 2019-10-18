@@ -107,7 +107,7 @@ public class ProposalVoteImpl implements ProposalVote {
     }
 
     @Override
-    public void auditProposal(int proposalId, int auditOptionId, String reason) {
+    public void auditProposal(int proposalId, int auditOptionId, String reason, int currentCouncilMemberCount) {
         require(proposalId > 0L, "Proposal id error, please check.");
         require(auditOptionId == ProposalConstant.YES || auditOptionId == ProposalConstant.NO, "audit option id error, please check.");
         /**
@@ -133,7 +133,8 @@ public class ProposalVoteImpl implements ProposalVote {
             //审核时， 拒绝后记录结果，满理事会成员总数，则表示提案最终被拒接
             auditRefuseRecords.put(address, reason);
             Byte proposalStatus = null;
-            if (auditRefuseRecords.size() == CouncilConfig.COUNCIL_MEMBERS) {
+            int councilMembers = CouncilConfig.COUNCIL_MEMBERS >= currentCouncilMemberCount ? CouncilConfig.COUNCIL_MEMBERS : currentCouncilMemberCount;
+            if (auditRefuseRecords.size() == councilMembers) {
                 proposal.setStatus(ProposalConstant.UNAPPROVED);
                 proposalStatus = ProposalConstant.UNAPPROVED;
             }
