@@ -133,7 +133,7 @@ public class ProposalVoteImpl implements ProposalVote {
             //审核时， 拒绝后记录结果，满理事会成员总数，则表示提案最终被拒接
             auditRefuseRecords.put(address, reason);
             Byte proposalStatus = null;
-            int councilMembers = CouncilConfig.COUNCIL_MEMBERS >= currentCouncilMemberCount ? CouncilConfig.COUNCIL_MEMBERS : currentCouncilMemberCount;
+            int councilMembers = CouncilConfig.COUNCIL_MEMBERS >= currentCouncilMemberCount ? currentCouncilMemberCount : CouncilConfig.COUNCIL_MEMBERS;
             if (auditRefuseRecords.size() == councilMembers) {
                 proposal.setStatus(ProposalConstant.UNAPPROVED);
                 proposalStatus = ProposalConstant.UNAPPROVED;
