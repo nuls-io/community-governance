@@ -49,11 +49,11 @@ import static io.nuls.contract.sdk.Utils.require;
  */
 public class ProposalVoteImpl implements ProposalVote {
 
-    protected Map<Integer, Proposal> proposals = new HashMap<>();
+    protected Map<Integer, Proposal> proposals = new HashMap<Integer, Proposal>();
     /**
      * K:提案id, V:Map(K:投票人; V:投票结果)
      */
-    protected Map<Integer, Map<Address, Integer>> voteRecords = new HashMap<>();
+    protected Map<Integer, Map<Address, Integer>> voteRecords = new HashMap<Integer, Map<Address, Integer>>();
 
     @Override
     public Proposal getProposal(int id){
@@ -87,7 +87,7 @@ public class ProposalVoteImpl implements ProposalVote {
         Address address = Msg.sender();
         Map<Address, Integer> record = voteRecords.get(proposalId);
         if(null == record){
-            record = new HashMap<>();
+            record = new HashMap<Address, Integer>();
             voteRecords.put(proposalId, record);
         }else{
             require(!record.containsKey(address),"The address already voted, please check.");

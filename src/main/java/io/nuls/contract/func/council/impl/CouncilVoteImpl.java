@@ -58,7 +58,7 @@ public class CouncilVoteImpl implements CouncilVote {
     /**
      * 理事
      */
-    protected Map<String, Applicant> councilMember = new HashMap<>(CouncilConfig.COUNCIL_MEMBERS);
+    protected Map<String, Applicant> councilMember = new HashMap<String, Applicant>(CouncilConfig.COUNCIL_MEMBERS);
 
     @Override
     public int getCurrentCouncilMemberCount(){
@@ -115,10 +115,12 @@ public class CouncilVoteImpl implements CouncilVote {
 
     @Override
     public boolean voteDirector(Address[] addresses) {
-        require(addresses.length <= CouncilConfig.COUNCIL_MEMBERS, "The number of voting addresses must be between 0 and 11");
+        int addressesLength = addresses.length;
+        require(addressesLength <= CouncilConfig.COUNCIL_MEMBERS, "The number of voting addresses must be between 0 and 11");
 
         String voter = Msg.sender().toString();
         //扫描之前的投票记录，如果该投票者投过票则先取消，再重新记录新的投票
+        //TODO 风险点，候选人没有上限(按申请理事费用 技术2.5万 非技术5万 和币总量，估算极端情况有2000~4000个申请人)
         for(Set<String> set : votes.values()){
             set.remove(voter);
         }
@@ -129,10 +131,10 @@ public class CouncilVoteImpl implements CouncilVote {
             addrs[i] = address;
             Set<String> addressSet = votes.get(address);
             if (null == addressSet) {
-                addressSet = new HashSet<>();
+                addressSet = new HashSet<String>();
+                votes.put(address, addressSet);
             }
             addressSet.add(voter);
-            votes.put(address, addressSet);
         }
         emit(new VoteDirectorEvent(voter, addrs));
         return true;
@@ -154,11 +156,11 @@ public class CouncilVoteImpl implements CouncilVote {
 
         Set<String> addressSet = votes.get(address);
         if(null == addressSet){
-            addressSet = new HashSet<>();
+            addressSet = new HashSet<String>();
+            votes.put(address, addressSet);
         }
         require(!addressSet.contains(voter), "The address was voted");
         addressSet.add(voter);
-        votes.put(address, addressSet);
         emit(new VoteOneDirectorEvent(voter, address));
         return true;
     }

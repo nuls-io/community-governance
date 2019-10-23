@@ -45,7 +45,7 @@ public class Proposal {
     private ProposalConfig config;
     private int status = ProposalConstant.INREVIEW;
     private boolean recognizanceRedeemed = false;
-    private Map<String, String> auditRefuseRecords = new HashMap<>();
+    private Map<String, String> auditRefuseRecords = new HashMap<String, String>();
 
     public Proposal() {
     }

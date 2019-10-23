@@ -14,10 +14,7 @@ import io.nuls.contract.sdk.Block;
 import io.nuls.contract.sdk.Msg;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.nuls.contract.sdk.Utils.emit;
 import static io.nuls.contract.sdk.Utils.require;
@@ -44,11 +41,16 @@ public class BaseBaseVoteImpl implements BaseVote {
         voteEntity.setProposalId(proposalId);
 
         List<VoteItem> itemList = new ArrayList<VoteItem>();
+        Set<Long> itemIdSet = new HashSet<Long>();
+        VoteItem item;
+        Long itemIdLong;
         for(int itemId = 0 ; itemId < items.length ; itemId++) {
-            VoteItem item = new VoteItem();
-            item.setId((long) itemId + 1);
+            item = new VoteItem();
+            itemIdLong = (long) (itemId + 1);
+            item.setId(itemIdLong);
             item.setContent(items[itemId]);
             itemList.add(item);
+            itemIdSet.add(itemIdLong);
         }
         voteEntity.setItems(itemList);
         voteEntity.setStatus(VoteStatus.STATUS_VOTEING);
@@ -81,34 +83,25 @@ public class BaseBaseVoteImpl implements BaseVote {
     @Override
     public boolean vote(long voteId, long[] itemIds) {
         require(canVote(voteId), "can not vote, please check.");
-        require(itemIds != null && itemIds.length > 0, "item id can not empty");
+        int itemIdsLength = itemIds.length;
+        require(itemIds != null && itemIdsLength > 0, "item id can not empty");
 
         VoteEntity voteEntity = votes.get(voteId);
         VoteConfig config = voteEntity.getConfig();
         if(config.isMultipleSelect()) {
-            require(itemIds.length <= config.getMaxSelectCount(), "option cannot be greater than " + config.getMaxSelectCount());
+            require(itemIdsLength <= config.getMaxSelectCount(), "option cannot be greater than " + config.getMaxSelectCount());
         }
         if(!config.isMultipleSelect()) {
-            require(itemIds.length == 1, "only support single selection");
+            require(itemIdsLength == 1, "only support single selection");
         }
         List<VoteItem> items = voteEntity.getItems();
+        Set<Long> itemIdSet = voteEntity.getItemIdSet();
         List<Long> itemIdList = new ArrayList<Long>();
 
-        for(int i = 0 ; i < itemIds.length ; i++) {
-            Long itemId = itemIds[i];
-            boolean hasExist = false;
-
-            for(int m = 0 ; m < items.size() ; m++) {
-                VoteItem voteItem = items.get(m);
-                if(voteItem.getId().equals(itemId)) {
-                    hasExist = true;
-                    break;
-                }
-            }
-            if(!hasExist) {
-                require(false, "entered the wrong item id");
-                return false;
-            }
+        Long itemId;
+        for(int i = 0 ; i < itemIdsLength ; i++) {
+            itemId = itemIds[i];
+            require(itemIdSet.contains(itemId), "entered the wrong item id");
             itemIdList.add(itemId);
         }
         Map<Address, List<Long>> records = voteRecords.get(voteId);
@@ -116,7 +109,7 @@ public class BaseBaseVoteImpl implements BaseVote {
             records = new HashMap<Address, List<Long>>();
             voteRecords.put(voteId, records);
         }
-        if(!voteEntity.getConfig().isVoteCanModify()) {
+        if(!config.isVoteCanModify()) {
             require(records.get(Msg.sender()) == null, "already voted");
         }
         records.put(Msg.sender(), itemIdList);

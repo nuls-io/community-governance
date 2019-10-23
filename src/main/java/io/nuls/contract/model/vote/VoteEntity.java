@@ -4,6 +4,7 @@ import io.nuls.contract.sdk.Address;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
 
 public class VoteEntity {
 
@@ -15,6 +16,7 @@ public class VoteEntity {
     private Address owner;
     private BigInteger recognizance;
     private List<VoteItem> items;
+    private Set<Long> itemIdSet;
     private Integer proposalId;
 
     public Long getId() {
@@ -55,6 +57,14 @@ public class VoteEntity {
 
     public void setItems(List<VoteItem> items) {
         this.items = items;
+    }
+
+    public Set<Long> getItemIdSet() {
+        return itemIdSet;
+    }
+
+    public void setItemIdSet(Set<Long> itemIdSet) {
+        this.itemIdSet = itemIdSet;
     }
 
     public int getStatus() {
