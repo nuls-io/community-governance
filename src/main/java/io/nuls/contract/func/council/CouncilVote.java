@@ -107,4 +107,6 @@ public interface CouncilVote {
      */
     Map<String, Applicant> getCouncilMember();
 
+
+    boolean replaceDirector(String outAddress, String inAddress);
 }

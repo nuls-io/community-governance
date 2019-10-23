@@ -67,11 +67,6 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
         return voteEntity;
     }
 
-//    public boolean init(long voteId, long startTime, long endTime, boolean isMultipleSelect, int maxSelectCount, boolean voteCanModify) {
-//        VoteConfig config = new VoteConfig(startTime, endTime, isMultipleSelect, maxSelectCount, voteCanModify);
-//        return baseVote.init(voteId, config);
-//    }
-
     public boolean vote(@Required long voteId, @Required long[] itemIds) {
         //验证票权
         require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
@@ -238,6 +233,16 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
     }
 
     /**
+     * 理事替换
+     * @param outAddress
+     * @param inAddress
+     * @return
+     */
+    public boolean replaceDirector(String outAddress, String inAddress){
+        onlyOwner();
+        return councilVote.replaceDirector(outAddress, inAddress);
+    }
+    /**
      * 获取理事会成员信息
      * @return
      */
@@ -286,13 +291,6 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
         require(councilVote.isCouncilMember(address), "Permission Denied");
         proposalVote.auditProposal(proposalId, auditOptionId, reason, councilVote.getCurrentCouncilMemberCount());
     }
-
-    /**
-     * 退还押金
-     */
-/*    public boolean redemptionProposal(@Required int proposalId){
-        return proposalVote.redemption(proposalId);
-    }*/
 
     /**
      * 将执行中的提案设置为已完成状态, 只能由现任理事会成员来执行

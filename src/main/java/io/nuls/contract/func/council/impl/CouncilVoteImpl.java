@@ -72,13 +72,13 @@ public class CouncilVoteImpl implements CouncilVote {
 
     @Override
     public boolean apply(int type, String desc, String email) {
-        require(type == CouncilConfig.MANAGEMENT || type == CouncilConfig.OPERATIONS || type == CouncilConfig.TECHNOLOGY, "Invalid candidate director type");
+        require(type == CouncilConfig.MANAGEMENT_TYPE || type == CouncilConfig.OPERATIONS_TYPE || type == CouncilConfig.TECHNOLOGY_TYPE, "Invalid candidate director type");
         require(null != desc, "desc can not empty");
         require(null != email, "email can not empty");
         Address address = Msg.sender();
         String addr = address.toString();
         require(!allApplicants.containsKey(addr), "The address has applied");
-        if(type == CouncilConfig.TECHNOLOGY){
+        if(type == CouncilConfig.TECHNOLOGY_TYPE){
             require(address.totalBalance().compareTo(CouncilConfig.TECHNOLOGY_ENTRY_MINIMUM) >= 0,
                     "The balance is not enough to apply for this type of director");
         }else{
@@ -114,20 +114,8 @@ public class CouncilVoteImpl implements CouncilVote {
     }
 
     @Override
-    public boolean removeDirector(String address) {
-        /**
-         * 仅撤销理事身份, 符合条件仍然是申请者 保留投票记录
-         */
-        require(null != address, "address can not empty");
-        require(councilMember.containsKey(address), "The director does not exist");
-        councilMember.remove(address);
-        emit(new RemoveDirectorEvent(address));
-        return true;
-    }
-
-    @Override
     public boolean voteDirector(Address[] addresses) {
-        require(addresses.length < CouncilConfig.COUNCIL_MEMBERS, "The number of voting addresses must be between 0 and 11");
+        require(addresses.length <= CouncilConfig.COUNCIL_MEMBERS, "The number of voting addresses must be between 0 and 11");
 
         String voter = Msg.sender().toString();
         //扫描之前的投票记录，如果该投票者投过票则先取消，再重新记录新的投票
@@ -176,6 +164,18 @@ public class CouncilVoteImpl implements CouncilVote {
     }
 
     @Override
+    public boolean removeDirector(String address) {
+        /**
+         * 仅撤销理事身份, 符合条件仍然是申请者 保留投票记录
+         */
+        require(null != address, "address can not empty");
+        require(councilMember.containsKey(address), "The director does not exist");
+        councilMember.remove(address);
+        emit(new RemoveDirectorEvent(address));
+        return true;
+    }
+
+    @Override
     public boolean cancelVoteOneDirector(String address) {
         require(address != null, "address can not empty");
         String voter = Msg.sender().toString();
@@ -189,16 +189,52 @@ public class CouncilVoteImpl implements CouncilVote {
     @Override
     public boolean addDirector(String address) {
         require(null != address, "address can not empty");
+        require(!councilMember.containsKey(address), "This address is already a director");
         require(councilMember.size() < CouncilConfig.COUNCIL_MEMBERS, "The council is full");
         Applicant applicant = allApplicants.get(address);
         require(null != applicant, "The address did not apply to the director");
+        int type = applicant.getType();
+        int currentTypeMember = getCountByType(type);
+        if(type == CouncilConfig.MANAGEMENT_TYPE){
+            require(currentTypeMember < CouncilConfig.MANAGEMENT_MEMBERS, "The management director is full");
+        } else if (type == CouncilConfig.OPERATIONS_TYPE){
+            require(currentTypeMember < CouncilConfig.OPERATIONS_MEMBERS, "The operations director is full");
+        } else if (type == CouncilConfig.TECHNOLOGY_TYPE){
+            require(currentTypeMember < CouncilConfig.TECHNOLOGY_MEMBERS, "The technology director is full");
+        }
         councilMember.put(applicant.getAddress(), applicant);
         emit(new AddDirectorEvent(address));
         return true;
     }
 
     @Override
+    public boolean replaceDirector(String outAddress, String inAddress) {
+        require(null != outAddress && null != inAddress, "address can not empty");
+        require(councilMember.containsKey(outAddress), "The director does not exist");
+        require(!councilMember.containsKey(inAddress), "This address is already a director");
+        Applicant applicantIn = allApplicants.get(inAddress);
+        require(null != applicantIn, inAddress + " has not been applied for");
+        Applicant applicantOut = councilMember.get(outAddress);
+        require(applicantOut.getType() == applicantIn.getType(), "The two types of directors are different");
+        councilMember.remove(outAddress);
+        councilMember.put(inAddress, applicantIn);
+        emit(new RemoveDirectorEvent(outAddress));
+        emit(new AddDirectorEvent(inAddress));
+        return true;
+    }
+
+    @Override
     public Map<String, Applicant> getCouncilMember() {
         return councilMember;
+    }
+
+    private int getCountByType(int type){
+        int count = 0;
+         for(Applicant applicant : councilMember.values()){
+             if(type == applicant.getType()){
+                 count++;
+             }
+         }
+         return count;
     }
 }

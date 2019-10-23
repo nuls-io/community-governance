@@ -70,9 +70,6 @@ public class ProposalVoteImpl implements ProposalVote {
         require(null != desc, "desc can not empty");
         require(null != email, "email can not empty");
 
-        /*BigInteger value = Msg.value();
-        require(value.compareTo(ProposalConstant.RECOGNIZANCE) >= 0, "value need greater than " + ProposalConstant.RECOGNIZANCE);*/
-
         int proposalId = proposals.size() + 1;
         Proposal proposal = new Proposal(proposalId, name, type, desc, email, Msg.sender());
         proposals.put(proposalId, proposal);
@@ -87,12 +84,6 @@ public class ProposalVoteImpl implements ProposalVote {
                 || voteOptionId == ProposalConstant.ABSTENTION,"The vote option is wrong, please check.");
         require(canVote(proposalId), "The proposal cannot currently vote, please check.");
 
-       /* Proposal proposal = proposals.get(proposalId);
-        require(null != proposal, "Proposal is not exist, please check.");
-        require(proposal.getStatus() == ProposalConstant.VOTING , "The proposal cannot currently vote, please check.");
-        long current = Block.timestamp();
-        require(proposal.getConfig().getStartTime() <= current && proposal.getConfig().getEndTime() >= current, "The proposal cannot currently vote, please check.");
-*/
         Address address = Msg.sender();
         Map<Address, Integer> record = voteRecords.get(proposalId);
         if(null == record){
@@ -142,26 +133,6 @@ public class ProposalVoteImpl implements ProposalVote {
         }
 
     }
-
-
-/*    @Override
-    public boolean redemption(int proposalId) {
-        require(proposalId > 0L, "Proposal id error, please check.");
-        Proposal proposal = proposals.get(proposalId);
-        require(null != proposal, "Proposal is not exist, please check.");
-        if(proposal.getStatus() == ProposalConstant.VOTING){
-            require(!canVote(proposalId), "current proposal vote is not over yet!");
-        }
-        require(!proposal.getRecognizanceRedeemed(), "recognizance has been redeemed");
-        BigInteger balance = Msg.address().balance();
-        require(balance.compareTo(ProposalConstant.RECOGNIZANCE) >= 0, "The contract balance is less than the recognizance amount");
-
-        // return amount
-        proposal.getOwner().transfer(ProposalConstant.RECOGNIZANCE);
-        proposal.setRecognizanceRedeemed(true);
-        emit(new RedemptionProposalEvent(proposalId, proposal.getOwner().toString()));
-        return true;
-    }*/
 
     @Override
     public boolean setProposalCompleted(int proposalId) {

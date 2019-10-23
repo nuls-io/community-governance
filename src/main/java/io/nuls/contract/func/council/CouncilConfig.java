@@ -33,15 +33,20 @@ import java.math.BigInteger;
 public interface CouncilConfig {
 
     /** 管理*/
-    int MANAGEMENT = 1;
+    int MANAGEMENT_TYPE = 1;
     /**
      * 运营理事
      */
-    int OPERATIONS = 2;
+    int OPERATIONS_TYPE = 2;
     /**
      * 技术理事
      */
-    int TECHNOLOGY = 3;
+    int TECHNOLOGY_TYPE = 3;
+
+    int MANAGEMENT_MEMBERS = 4;
+    int OPERATIONS_MEMBERS = 3;
+    int TECHNOLOGY_MEMBERS = 4;
+
 
     int COUNCIL_MEMBERS = 11;
     BigInteger TECHNOLOGY_ENTRY_MINIMUM = new BigInteger("2500000000000");
