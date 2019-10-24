@@ -31,6 +31,8 @@ import io.nuls.contract.event.proxy.SetAgentEvent;
 import io.nuls.contract.func.proxy.ProxyAgent;
 import io.nuls.contract.model.proxy.Mandator;
 import io.nuls.contract.sdk.Msg;
+import io.nuls.contract.sdk.Utils;
+import io.nuls.contract.sdk.event.DebugEvent;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,21 +63,25 @@ public class ProxyAgentImpl implements ProxyAgent {
             //如果待设置的代理已经有代理人了就不能成为代理人
             require(null == mandatorAgentAddress.getAgentAddress(), "The agent address has an agent");
         }
+        //设置者 不能是别人的代理
+        Set<String> mandatorSet = getMandators(sender);
+        require(mandatorSet.isEmpty(), "The sender address is an agent");
+
         Mandator mandatorSender = mandators.get(sender);
+        Utils.emit(new DebugEvent("mandatorSender", "mandatorSender: " + mandatorSender ));
         if(null == mandatorSender){
             mandatorSender = new Mandator(sender, agentAddress, false);
         }else{
-            //设置者 不能是其他地址的代理人
-            Set<String> mandatorSet = getMandators(sender);
-            require(mandatorSet.isEmpty(), "The sender address is an agent");
             //设置者 必须没有设置过代理人
             require(null == mandatorSender.getAgentAddress(), "The address has an agent");
             mandatorSender.setAgentAddress(agentAddress);
         }
         String mandatorAddress = mandatorSender.getAddress();
         mandators.put(mandatorAddress, mandatorSender);
-
+        Utils.emit(new DebugEvent("委托者", "mandatorAddress: " + mandatorAddress ));
+        Utils.emit(new DebugEvent("代理人", "agent: " + agentAddress));
         addMandatorToAgents(agentAddress, mandatorAddress);
+        Utils.emit(new DebugEvent("代理人的委托者", "agentMAddress: " + agents.get(agentAddress).size()));
         //发送新增代理事件，包含委托人地址、代理地址
         emit(new SetAgentEvent(mandatorAddress, agentAddress));
         return true;
