@@ -53,6 +53,7 @@ public class BaseBaseVoteImpl implements BaseVote {
             itemIdSet.add(itemIdLong);
         }
         voteEntity.setItems(itemList);
+        voteEntity.setItemIdSet(itemIdSet);
         voteEntity.setStatus(VoteStatus.STATUS_VOTEING);
         voteEntity.setOwner(Msg.sender());
         votes.put(voteId, voteEntity);
