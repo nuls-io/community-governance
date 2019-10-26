@@ -256,8 +256,8 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
      * 创建提案
      */
     @Payable
-    public Proposal createProposal(@Required String name, @Required int type, @Required String desc, @Required String email){
-        return proposalVote.createProposal(name, type, desc, email);
+    public Proposal createProposal(@Required String name, @Required int type, @Required String desc, @Required String email, @Required boolean voteCanModify){
+        return proposalVote.createProposal(name, type, desc, email, voteCanModify);
     }
 
     @View

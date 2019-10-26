@@ -38,14 +38,16 @@ public class CreateProposalEvent implements Event {
     private String desc;
     private String email;
     private String owner;
+    private boolean voteCanModify;
 
-    public CreateProposalEvent(int id, String name, int type, String desc, String email, String owner) {
+    public CreateProposalEvent(int id, String name, int type, String desc, String email, String owner, boolean voteCanModify) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.desc = desc;
         this.email = email;
         this.owner = owner;
+        this.voteCanModify = voteCanModify;
     }
 
     public int getId() {
@@ -94,5 +96,13 @@ public class CreateProposalEvent implements Event {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public boolean isVoteCanModify() {
+        return voteCanModify;
+    }
+
+    public void setVoteCanModify(boolean voteCanModify) {
+        this.voteCanModify = voteCanModify;
     }
 }
