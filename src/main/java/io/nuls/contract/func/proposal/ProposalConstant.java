@@ -64,5 +64,6 @@ public interface ProposalConstant {
 
     int COMPLETED = 6;
 
+//    long DAY15_SECONDS = 86400 * 15;
     long DAY15_SECONDS = 60*60;
 }
