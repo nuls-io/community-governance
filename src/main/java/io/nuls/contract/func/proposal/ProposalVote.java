@@ -37,7 +37,7 @@ public interface ProposalVote {
     /**
      * 创建提案
      */
-    Proposal createProposal(String name, int type, String desc, String email);
+    Proposal createProposal(String name, int type, String desc, String email, boolean voteCanModify);
 
     /**
      *  为提案投票

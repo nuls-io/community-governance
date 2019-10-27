@@ -42,6 +42,7 @@ public class Proposal {
     private String desc;
     private String email;
     private Address owner;
+    private boolean voteCanModify;
     private ProposalConfig config;
     private int status = ProposalConstant.INREVIEW;
     private boolean recognizanceRedeemed = false;
@@ -50,13 +51,14 @@ public class Proposal {
     public Proposal() {
     }
 
-    public Proposal(int id, String name, int type, String desc, String email, Address owner) {
+    public Proposal(int id, String name, int type, String desc, String email, Address owner, boolean voteCanModify) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.desc = desc;
         this.email = email;
         this.owner = owner;
+        this.voteCanModify = voteCanModify;
     }
 
     public int getId() {
@@ -97,6 +99,14 @@ public class Proposal {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isVoteCanModify() {
+        return voteCanModify;
+    }
+
+    public void setVoteCanModify(boolean voteCanModify) {
+        this.voteCanModify = voteCanModify;
     }
 
     public ProposalConfig getConfig() {

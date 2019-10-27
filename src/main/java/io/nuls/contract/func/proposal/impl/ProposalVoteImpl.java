@@ -63,7 +63,7 @@ public class ProposalVoteImpl implements ProposalVote {
     }
 
     @Override
-    public Proposal createProposal(String name, int type, String desc, String email) {
+    public Proposal createProposal(String name, int type, String desc, String email, boolean voteCanModify) {
         require(null != name, "name can not empty");
         require(type == ProposalConstant.ROLE || type == ProposalConstant.SYS_PARAM || type == ProposalConstant.COMMUNITY_FUND
                 || type == ProposalConstant.OTHER_TYPE , "Invalid proposal type");
@@ -71,18 +71,20 @@ public class ProposalVoteImpl implements ProposalVote {
         require(null != email, "email can not empty");
 
         int proposalId = proposals.size() + 1;
-        Proposal proposal = new Proposal(proposalId, name, type, desc, email, Msg.sender());
+        Proposal proposal = new Proposal(proposalId, name, type, desc, email, Msg.sender(),voteCanModify);
         proposals.put(proposalId, proposal);
-        emit(new CreateProposalEvent(proposalId, name, type, desc, email, Msg.sender().toString()));
+        emit(new CreateProposalEvent(proposalId, name, type, desc, email, Msg.sender().toString(), voteCanModify));
         return proposal;
     }
 
     @Override
     public boolean voteProposal(int proposalId, int voteOptionId) {
-        require(proposalId > 0L, "Option id error");
+        require(proposalId > 0L, "Proposal id error");
         require(voteOptionId == ProposalConstant.FAVOUR || voteOptionId == ProposalConstant.AGAINST
                 || voteOptionId == ProposalConstant.ABSTENTION,"The vote option is wrong, please check.");
-        require(canVote(proposalId), "The proposal cannot currently vote, please check.");
+        Proposal proposal = proposals.get(proposalId);
+        require(null != proposal, "Proposal is not exist, please check.");
+        require(canVote(proposal), "The proposal cannot currently vote, please check.");
 
         Address address = Msg.sender();
         Map<Address, Integer> record = voteRecords.get(proposalId);
@@ -90,7 +92,10 @@ public class ProposalVoteImpl implements ProposalVote {
             record = new HashMap<Address, Integer>();
             voteRecords.put(proposalId, record);
         }else{
-            require(!record.containsKey(address),"The address already voted, please check.");
+            if(!proposal.isVoteCanModify()) {
+                //如果提案已设置为不能改票，就要验证该用户是否重复投票
+                require(!record.containsKey(address), "The address already voted, please check.");
+            }
         }
         record.put(address, voteOptionId);
         emit(new VoteProposalEvent(proposalId, address.toString(), voteOptionId));
@@ -140,7 +145,7 @@ public class ProposalVoteImpl implements ProposalVote {
         Proposal proposal = proposals.get(proposalId);
         require(null != proposal, "Proposal is not exist, please check.");
         if(proposal.getStatus() == ProposalConstant.VOTING){
-            require(!canVote(proposalId), "current proposal vote is not over yet!");
+            require(!canVote(proposal), "current proposal vote is not over yet!");
         }
         proposal.setStatus(ProposalConstant.COMPLETED);
         //事件
@@ -148,15 +153,12 @@ public class ProposalVoteImpl implements ProposalVote {
         return true;
     }
 
-    private boolean canVote(int proposalId){
-        /**
-         * 是否有该提案
-         * 该提案是否可以投票(状态，时间段)
-         */
-        Proposal proposal = proposals.get(proposalId);
-        if(null == proposal){
-            return false;
-        }
+    /**
+     * 该提案是否可以投票(状态，时间段)
+     * @return
+     */
+    private boolean canVote(Proposal proposal){
+
         if(proposal.getStatus() != ProposalConstant.VOTING ){
             return false;
         }
