@@ -21,7 +21,6 @@ import io.nuls.contract.sdk.annotation.JSONSerializable;
 import io.nuls.contract.sdk.annotation.Payable;
 import io.nuls.contract.sdk.annotation.Required;
 import io.nuls.contract.sdk.annotation.View;
-import io.nuls.contract.sdk.event.DebugEvent;
 
 import java.util.List;
 import java.util.Map;
@@ -55,9 +54,6 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
     public VoteEntity createBaseVote(@Required String title, @Required String desc, @Required String[] items, @Required long startTime, @Required long endTime,
                                      @Required boolean isMultipleSelect, @Required int minSelectCount, @Required int maxSelectCount, @Required boolean voteCanModify, Integer proposalId) {
         VoteEntity voteEntity = baseVote.create(title, desc, items, proposalId);
-
-        Utils.emit(new DebugEvent("startTime", ": " + startTime));
-        Utils.emit(new DebugEvent("endTime", ": " + endTime));
         VoteConfig config = new VoteConfig(startTime, endTime, isMultipleSelect, minSelectCount, maxSelectCount, voteCanModify);
 
         boolean success = baseVote.init(voteEntity.getId(), config);

@@ -31,8 +31,6 @@ import io.nuls.contract.event.proxy.SetAgentEvent;
 import io.nuls.contract.func.proxy.ProxyAgent;
 import io.nuls.contract.model.proxy.Mandator;
 import io.nuls.contract.sdk.Msg;
-import io.nuls.contract.sdk.Utils;
-import io.nuls.contract.sdk.event.DebugEvent;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -68,7 +66,6 @@ public class ProxyAgentImpl implements ProxyAgent {
         require(mandatorSet.isEmpty(), "The sender address is an agent");
 
         Mandator mandatorSender = mandators.get(sender);
-        Utils.emit(new DebugEvent("mandatorSender", "mandatorSender: " + mandatorSender ));
         if(null == mandatorSender){
             mandatorSender = new Mandator(sender, agentAddress, false);
         }else{
@@ -78,10 +75,7 @@ public class ProxyAgentImpl implements ProxyAgent {
         }
         String mandatorAddress = mandatorSender.getAddress();
         mandators.put(mandatorAddress, mandatorSender);
-        Utils.emit(new DebugEvent("委托者", "mandatorAddress: " + mandatorAddress ));
-        Utils.emit(new DebugEvent("代理人", "agent: " + agentAddress));
         addMandatorToAgents(agentAddress, mandatorAddress);
-        Utils.emit(new DebugEvent("代理人的委托者", "agentMAddress: " + agents.get(agentAddress).size()));
         //发送新增代理事件，包含委托人地址、代理地址
         emit(new SetAgentEvent(mandatorAddress, agentAddress));
         return true;
