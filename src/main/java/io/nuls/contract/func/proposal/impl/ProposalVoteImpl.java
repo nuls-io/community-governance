@@ -60,7 +60,7 @@ public class ProposalVoteImpl implements ProposalVote {
 
     @Override
     public List<Proposal> getVotedProposal(Address address) {
-        List<Proposal> list = new ArrayList<>();
+        List<Proposal> list = new ArrayList<Proposal>();
         for (Map.Entry<Integer, Map<Address, Integer>> entry : voteRecords.entrySet()){
             if(entry.getValue().containsKey(address)){
                 list.add(proposals.get(entry.getKey()));

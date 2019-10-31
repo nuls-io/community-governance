@@ -27,7 +27,7 @@ public class BaseBaseVoteImpl implements BaseVote {
 
     @Override
     public List<VoteEntity> getVotedVotes(Address address) {
-        List<VoteEntity> list = new ArrayList<>();
+        List<VoteEntity> list = new ArrayList<VoteEntity>();
         for (Map.Entry<Long, Map<Address, List<Long>>> entry : voteRecords.entrySet()){
             if(entry.getValue().containsKey(address)){
                 list.add(votes.get(entry.getKey()));

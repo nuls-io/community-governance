@@ -237,7 +237,7 @@ public class ProxyAgentImpl implements ProxyAgent {
             agentAddress = Msg.sender().toString();
         }
         Set<String> mandatorSet = agents.get(agentAddress);
-        return mandatorSet == null ? new HashSet<>(): mandatorSet;
+        return mandatorSet == null ? new HashSet<String>(): mandatorSet;
     }
 
     @Override
@@ -259,7 +259,7 @@ public class ProxyAgentImpl implements ProxyAgent {
     private void addMandatorToAgents(String agentAddress, String mandatorAddress){
         Set<String> mandatorSet = agents.get(agentAddress);
         if(null == mandatorSet){
-            mandatorSet = new HashSet<>();
+            mandatorSet = new HashSet<String>();
         }
         mandatorSet.add(mandatorAddress);
         agents.put(agentAddress, mandatorSet);

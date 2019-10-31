@@ -61,7 +61,7 @@ public class CouncilVoteImpl implements CouncilVote {
     @Override
     public List<String> getVotedApplicantAddress(String address) {
         require(null != address, "address can not empty");
-        List<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<String>();
         for(Map.Entry<String, Set<String>> entry  : votes.entrySet()){
             if(entry.getValue().contains(address)){
                 list.add(entry.getKey());
