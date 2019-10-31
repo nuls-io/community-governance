@@ -43,8 +43,8 @@ public interface CouncilConfig {
      */
     int TECHNOLOGY_TYPE = 3;
 
-    int MANAGEMENT_MEMBERS = 4;
-    int OPERATIONS_MEMBERS = 3;
+    int MANAGEMENT_MEMBERS = 3;
+    int OPERATIONS_MEMBERS = 4;
     int TECHNOLOGY_MEMBERS = 4;
 
 
