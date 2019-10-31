@@ -76,7 +76,7 @@ public interface ProposalVote {
      * @param address
      * @return
      */
-    List<Proposal> getProposal(String address);
+    List<Proposal> getVotedProposal(String address);
 
     /**
      * 作废正在投票中的该地址的投票记录

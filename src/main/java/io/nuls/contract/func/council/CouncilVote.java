@@ -116,7 +116,7 @@ public interface CouncilVote {
      * @param address
      * @return
      */
-    List<String> getApplicantAddress(String address);
+    List<String> getVotedApplicantAddress(String address);
 
     /**
      * 作废正在投票中的该地址的投票记录

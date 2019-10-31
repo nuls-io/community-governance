@@ -59,7 +59,7 @@ public class CouncilVoteImpl implements CouncilVote {
 
 
     @Override
-    public List<String> getApplicantAddress(String address) {
+    public List<String> getVotedApplicantAddress(String address) {
         require(null != address, "address can not empty");
         List<String> list = new ArrayList<>();
         for(Map.Entry<String, Set<String>> entry  : votes.entrySet()){

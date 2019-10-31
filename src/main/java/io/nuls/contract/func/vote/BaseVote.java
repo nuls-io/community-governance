@@ -26,7 +26,7 @@ public interface BaseVote {
     boolean queryAddressHasVote(long voteId, Address address);
 
 
-    List<VoteEntity> getVotes(String address);
+    List<VoteEntity> getVotedVotes(String address);
 
     /**
      * 作废正在投票中的该地址的投票记录

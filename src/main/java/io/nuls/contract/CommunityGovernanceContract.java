@@ -301,4 +301,25 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
         require(councilVote.isCouncilMember(address), "Permission Denied");
         return proposalVote.setProposalCompleted(proposalId);
     }
+
+    @View
+    @JSONSerializable
+    public List<String> getVotedApplicantAddress(String address){
+        return councilVote.getVotedApplicantAddress(address);
+    }
+
+    @View
+    @JSONSerializable
+    public List<Proposal> getVotedProposal(String address){
+        return proposalVote.getVotedProposal(address);
+    }
+
+    @View
+    @JSONSerializable
+    public List<VoteEntity> getVotedVotes(String address){
+        return baseVote.getVotedVotes(address);
+    }
+
+
+
 }
