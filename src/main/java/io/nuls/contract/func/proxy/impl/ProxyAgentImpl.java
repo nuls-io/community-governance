@@ -28,7 +28,10 @@ import io.nuls.contract.event.proxy.ModifyAgentEvent;
 import io.nuls.contract.event.proxy.RevokeAgentEvent;
 import io.nuls.contract.event.proxy.RevokeMandatorEvent;
 import io.nuls.contract.event.proxy.SetAgentEvent;
+import io.nuls.contract.func.council.CouncilVote;
+import io.nuls.contract.func.proposal.ProposalVote;
 import io.nuls.contract.func.proxy.ProxyAgent;
+import io.nuls.contract.func.vote.BaseVote;
 import io.nuls.contract.model.proxy.Mandator;
 import io.nuls.contract.sdk.Msg;
 
@@ -46,9 +49,23 @@ import static io.nuls.contract.sdk.Utils.require;
  */
 public class ProxyAgentImpl implements ProxyAgent {
 
+    private BaseVote baseVote;
+
+    private ProposalVote proposalVote;
+
+    private CouncilVote councilVote;
+
     protected Map<String, Mandator> mandators = new HashMap<String, Mandator>();
 
     protected Map<String, Set<String>> agents = new HashMap<String, Set<String>>();
+
+    @Override
+    public void init(BaseVote baseVote, ProposalVote proposalVote, CouncilVote councilVote){
+        this.baseVote = baseVote;
+        this.proposalVote = proposalVote;
+        this.councilVote = councilVote;
+    }
+
 
     @Override
     public boolean setAgent(String agentAddress) {
@@ -76,10 +93,26 @@ public class ProxyAgentImpl implements ProxyAgent {
         String mandatorAddress = mandatorSender.getAddress();
         mandators.put(mandatorAddress, mandatorSender);
         addMandatorToAgents(agentAddress, mandatorAddress);
+        //作废委托者之前的投票
+        invalidVotes(sender);
         //发送新增代理事件，包含委托人地址、代理地址
         emit(new SetAgentEvent(mandatorAddress, agentAddress));
         return true;
     }
+
+    /**
+     * 作废委托者之前的投票
+     * @param address
+     */
+    private void invalidVotes(String address){
+        //提案
+        proposalVote.invalidVotes(address);
+        //普通投票
+        baseVote.invalidVotes(address);
+        //理事
+        councilVote.invalidVotes(address);
+    }
+
 
     @Override
     public boolean modifyAgent(String agentAddress) {
@@ -107,6 +140,8 @@ public class ProxyAgentImpl implements ProxyAgent {
         //设置新的代理人
         mandatorSender.setAgentAddress(agentAddress);
         addMandatorToAgents(agentAddress, mandatorSender.getAddress());
+        //作废委托者之前的投票
+        invalidVotes(sender);
         //发送更新代理事件，包含委托人地址、原代理地址、新代理地址
         emit(new ModifyAgentEvent(mandatorSender.getAddress(), oldAgentAddress, agentAddress));
         return true;

@@ -27,6 +27,7 @@ package io.nuls.contract.func.council;
 import io.nuls.contract.model.council.Applicant;
 import io.nuls.contract.sdk.Address;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -109,4 +110,18 @@ public interface CouncilVote {
 
 
     boolean replaceDirector(String outAddress, String inAddress);
+
+    /**
+     * 根据地址查询 所有已投的申请人
+     * @param address
+     * @return
+     */
+    List<String> getApplicantAddress(String address);
+
+    /**
+     * 作废正在投票中的该地址的投票记录
+     * @param address
+     * @return
+     */
+    void invalidVotes(String address);
 }

@@ -37,7 +37,9 @@ import io.nuls.contract.sdk.Address;
 import io.nuls.contract.sdk.Block;
 import io.nuls.contract.sdk.Msg;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.nuls.contract.sdk.Utils.emit;
@@ -54,6 +56,30 @@ public class ProposalVoteImpl implements ProposalVote {
      * K:提案id, V:Map(K:投票人; V:投票结果)
      */
     protected Map<Integer, Map<Address, Integer>> voteRecords = new HashMap<Integer, Map<Address, Integer>>();
+
+
+    @Override
+    public List<Proposal> getProposal(String address) {
+        require(null != address, "address can not empty");
+        List<Proposal> list = new ArrayList<>();
+        for (Map.Entry<Integer, Map<Address, Integer>> entry : voteRecords.entrySet()){
+            if(entry.getValue().containsKey(address)){
+                list.add(proposals.get(entry.getKey()));
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public void invalidVotes(String address) {
+        require(null != address, "address can not empty");
+        List<Proposal> proposalList = this.getProposal(address);
+        for (Proposal proposal : proposalList){
+            if(this.canVote(proposal)){
+                voteRecords.get(proposal.getId()).remove(address);
+            }
+        }
+    }
 
     @Override
     public Proposal getProposal(int id){
@@ -101,6 +127,9 @@ public class ProposalVoteImpl implements ProposalVote {
         emit(new VoteProposalEvent(proposalId, address.toString(), voteOptionId));
         return false;
     }
+
+
+
 
     @Override
     public void auditProposal(int proposalId, int auditOptionId, String reason, int currentCouncilMemberCount) {
@@ -157,7 +186,8 @@ public class ProposalVoteImpl implements ProposalVote {
      * 该提案是否可以投票(状态，时间段)
      * @return
      */
-    private boolean canVote(Proposal proposal){
+    @Override
+    public boolean canVote(Proposal proposal){
 
         if(proposal.getStatus() != ProposalConstant.VOTING ){
             return false;
@@ -168,4 +198,5 @@ public class ProposalVoteImpl implements ProposalVote {
         }
         return true;
     }
+
 }

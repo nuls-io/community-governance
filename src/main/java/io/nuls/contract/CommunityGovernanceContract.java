@@ -48,6 +48,7 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
         //投票
         baseVote = new BaseBaseVoteImpl();
 
+        proxyAgent.init(baseVote, proposalVote, councilVote);
     }
 
     @Payable
@@ -92,7 +93,6 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
     public boolean queryAddressHasVote(@Required long voteId, @Required  Address address) {
         return baseVote.queryAddressHasVote(voteId, address);
     }
-
 
     /**
      * 委托人设置代理

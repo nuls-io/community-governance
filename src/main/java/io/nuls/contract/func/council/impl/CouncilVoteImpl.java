@@ -31,10 +31,7 @@ import io.nuls.contract.model.council.Applicant;
 import io.nuls.contract.sdk.Address;
 import io.nuls.contract.sdk.Msg;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static io.nuls.contract.sdk.Utils.emit;
 import static io.nuls.contract.sdk.Utils.require;
@@ -59,6 +56,27 @@ public class CouncilVoteImpl implements CouncilVote {
      * 理事
      */
     protected Map<String, Applicant> councilMember = new HashMap<String, Applicant>(CouncilConfig.COUNCIL_MEMBERS);
+
+
+    @Override
+    public List<String> getApplicantAddress(String address) {
+        require(null != address, "address can not empty");
+        List<String> list = new ArrayList<>();
+        for(Map.Entry<String, Set<String>> entry  : votes.entrySet()){
+            if(entry.getValue().contains(address)){
+                list.add(entry.getKey());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public void invalidVotes(String address) {
+        require(null != address, "address can not empty");
+        for(Set<String> set : votes.values()){
+            set.remove(address);
+        }
+    }
 
     @Override
     public int getCurrentCouncilMemberCount(){

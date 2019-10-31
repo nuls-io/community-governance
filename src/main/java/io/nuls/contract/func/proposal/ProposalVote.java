@@ -26,6 +26,8 @@ package io.nuls.contract.func.proposal;
 
 import io.nuls.contract.model.proposal.Proposal;
 
+import java.util.List;
+
 /**
  * @author: Charlie
  * @date: 2019/8/15
@@ -66,4 +68,20 @@ public interface ProposalVote {
      * @return
      */
     boolean setProposalCompleted(int proposalId);
+
+    boolean canVote(Proposal proposal);
+
+    /**
+     * 根据地址查询 所有已投的提案
+     * @param address
+     * @return
+     */
+    List<Proposal> getProposal(String address);
+
+    /**
+     * 作废正在投票中的该地址的投票记录
+     * @param address
+     * @return
+     */
+    void invalidVotes(String address);
 }

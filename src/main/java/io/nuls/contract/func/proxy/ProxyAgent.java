@@ -24,6 +24,10 @@
 
 package io.nuls.contract.func.proxy;
 
+import io.nuls.contract.func.council.CouncilVote;
+import io.nuls.contract.func.proposal.ProposalVote;
+import io.nuls.contract.func.vote.BaseVote;
+
 import java.util.Set;
 
 /**
@@ -32,6 +36,8 @@ import java.util.Set;
  * @date: 2019/8/13
  */
 public interface ProxyAgent {
+
+    void init(BaseVote baseVote, ProposalVote proposalVote, CouncilVote councilVote);
     /**
      * 委托人设置代理
      * @param agentAddress

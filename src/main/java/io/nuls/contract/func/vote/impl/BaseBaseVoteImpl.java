@@ -24,6 +24,30 @@ public class BaseBaseVoteImpl implements BaseVote {
     protected Map<Long, VoteEntity> votes = new HashMap<Long, VoteEntity>();
     protected Map<Long, Map<Address, List<Long>>> voteRecords = new HashMap<Long, Map<Address, List<Long>>>();
 
+
+    @Override
+    public List<VoteEntity> getVotes(String address) {
+        require(null != address, "address can not empty");
+        List<VoteEntity> list = new ArrayList<>();
+        for (Map.Entry<Long, Map<Address, List<Long>>> entry : voteRecords.entrySet()){
+            if(entry.getValue().containsKey(address)){
+                list.add(votes.get(entry.getKey()));
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public void invalidVotes(String address) {
+        require(null != address, "address can not empty");
+        List<VoteEntity> voteList = this.getVotes(address);
+        for (VoteEntity voteEntity : voteList){
+            if(this.canVote(voteEntity.getId())){
+                voteRecords.get(voteEntity.getId()).remove(address);
+            }
+        }
+    }
+
     @Override
     public VoteEntity create(String title, String desc, String[] items, Integer proposalId) {
         require(items != null && items.length > 0, "items can not empty");
@@ -75,7 +99,6 @@ public class BaseBaseVoteImpl implements BaseVote {
             require(config.getMaxSelectCount() <= items.size(), "max select count can not greater then item size");
         }
         voteEntity.setConfig(config);
-        voteEntity.setStatus(VoteStatus.STATUS_WAIT_VOTE);
         emit(new VoteInitEvent(voteId, config));
         return true;
     }
@@ -149,8 +172,6 @@ public class BaseBaseVoteImpl implements BaseVote {
         }
         if(config.getStartTime() > Block.timestamp()) {
             return false;
-        } else if(voteEntity.getStatus() == VoteStatus.STATUS_WAIT_VOTE) {
-            updateStatus(voteEntity, VoteStatus.STATUS_VOTEING);
         }
         if(voteEntity.getStatus() != VoteStatus.STATUS_VOTEING) {
             return false;
