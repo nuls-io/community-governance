@@ -25,6 +25,7 @@
 package io.nuls.contract.func.proposal;
 
 import io.nuls.contract.model.proposal.Proposal;
+import io.nuls.contract.sdk.Address;
 
 import java.util.List;
 
@@ -76,12 +77,12 @@ public interface ProposalVote {
      * @param address
      * @return
      */
-    List<Proposal> getVotedProposal(String address);
+    List<Proposal> getVotedProposal(Address address);
 
     /**
      * 作废正在投票中的该地址的投票记录
      * @param address
      * @return
      */
-    void invalidVotes(String address);
+    void invalidVotes(Address address);
 }

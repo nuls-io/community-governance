@@ -59,8 +59,7 @@ public class ProposalVoteImpl implements ProposalVote {
 
 
     @Override
-    public List<Proposal> getVotedProposal(String address) {
-        require(null != address, "address can not empty");
+    public List<Proposal> getVotedProposal(Address address) {
         List<Proposal> list = new ArrayList<>();
         for (Map.Entry<Integer, Map<Address, Integer>> entry : voteRecords.entrySet()){
             if(entry.getValue().containsKey(address)){
@@ -71,7 +70,7 @@ public class ProposalVoteImpl implements ProposalVote {
     }
 
     @Override
-    public void invalidVotes(String address) {
+    public void invalidVotes(Address address) {
         require(null != address, "address can not empty");
         List<Proposal> proposalList = this.getVotedProposal(address);
         for (Proposal proposal : proposalList){

@@ -26,8 +26,7 @@ public class BaseBaseVoteImpl implements BaseVote {
 
 
     @Override
-    public List<VoteEntity> getVotedVotes(String address) {
-        require(null != address, "address can not empty");
+    public List<VoteEntity> getVotedVotes(Address address) {
         List<VoteEntity> list = new ArrayList<>();
         for (Map.Entry<Long, Map<Address, List<Long>>> entry : voteRecords.entrySet()){
             if(entry.getValue().containsKey(address)){
@@ -38,7 +37,7 @@ public class BaseBaseVoteImpl implements BaseVote {
     }
 
     @Override
-    public void invalidVotes(String address) {
+    public void invalidVotes(Address address) {
         require(null != address, "address can not empty");
         List<VoteEntity> voteList = this.getVotedVotes(address);
         for (VoteEntity voteEntity : voteList){

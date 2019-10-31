@@ -304,19 +304,19 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
 
     @View
     @JSONSerializable
-    public List<String> getVotedApplicantAddress(String address){
-        return councilVote.getVotedApplicantAddress(address);
+    public List<String> getVotedApplicantAddress(@Required Address address){
+        return councilVote.getVotedApplicantAddress(address.toString());
     }
 
     @View
     @JSONSerializable
-    public List<Proposal> getVotedProposal(String address){
+    public List<Proposal> getVotedProposal(@Required Address address){
         return proposalVote.getVotedProposal(address);
     }
 
     @View
     @JSONSerializable
-    public List<VoteEntity> getVotedVotes(String address){
+    public List<VoteEntity> getVotedVotes(@Required Address address){
         return baseVote.getVotedVotes(address);
     }
 

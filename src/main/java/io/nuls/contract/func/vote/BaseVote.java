@@ -26,12 +26,12 @@ public interface BaseVote {
     boolean queryAddressHasVote(long voteId, Address address);
 
 
-    List<VoteEntity> getVotedVotes(String address);
+    List<VoteEntity> getVotedVotes(Address address);
 
     /**
      * 作废正在投票中的该地址的投票记录
      * @param address
      * @return
      */
-    void invalidVotes(String address);
+    void invalidVotes(Address address);
 }

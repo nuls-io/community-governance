@@ -33,6 +33,7 @@ import io.nuls.contract.func.proposal.ProposalVote;
 import io.nuls.contract.func.proxy.ProxyAgent;
 import io.nuls.contract.func.vote.BaseVote;
 import io.nuls.contract.model.proxy.Mandator;
+import io.nuls.contract.sdk.Address;
 import io.nuls.contract.sdk.Msg;
 
 import java.util.HashMap;
@@ -70,7 +71,8 @@ public class ProxyAgentImpl implements ProxyAgent {
     @Override
     public boolean setAgent(String agentAddress) {
         require(null != agentAddress, "Agent address can not empty");
-        String sender = Msg.sender().toString();
+        Address senderAddress = Msg.sender();
+        String sender = senderAddress.toString();
         require(!agentAddress.equals(sender), "The agent cannot be himself");
         Mandator mandatorAgentAddress = mandators.get(agentAddress);
         if(null != mandatorAgentAddress) {
@@ -94,7 +96,7 @@ public class ProxyAgentImpl implements ProxyAgent {
         mandators.put(mandatorAddress, mandatorSender);
         addMandatorToAgents(agentAddress, mandatorAddress);
         //作废委托者之前的投票
-        invalidVotes(sender);
+        invalidVotes(senderAddress);
         //发送新增代理事件，包含委托人地址、代理地址
         emit(new SetAgentEvent(mandatorAddress, agentAddress));
         return true;
@@ -104,13 +106,13 @@ public class ProxyAgentImpl implements ProxyAgent {
      * 作废委托者之前的投票
      * @param address
      */
-    private void invalidVotes(String address){
+    private void invalidVotes(Address address){
         //提案
         proposalVote.invalidVotes(address);
         //普通投票
         baseVote.invalidVotes(address);
         //理事
-        councilVote.invalidVotes(address);
+        councilVote.invalidVotes(address.toString());
     }
 
 
@@ -123,7 +125,8 @@ public class ProxyAgentImpl implements ProxyAgent {
          * 发送事件
          */
         require(null != agentAddress, "Agent address can not empty");
-        String sender = Msg.sender().toString();
+        Address senderAddress = Msg.sender();
+        String sender = senderAddress.toString();
         require(!agentAddress.equals(sender), "The agent cannot be himself");
         Mandator mandatorAgentAddress = mandators.get(agentAddress);
         if(null != mandatorAgentAddress) {
@@ -141,7 +144,7 @@ public class ProxyAgentImpl implements ProxyAgent {
         mandatorSender.setAgentAddress(agentAddress);
         addMandatorToAgents(agentAddress, mandatorSender.getAddress());
         //作废委托者之前的投票
-        invalidVotes(sender);
+        invalidVotes(senderAddress);
         //发送更新代理事件，包含委托人地址、原代理地址、新代理地址
         emit(new ModifyAgentEvent(mandatorSender.getAddress(), oldAgentAddress, agentAddress));
         return true;
