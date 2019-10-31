@@ -33,14 +33,10 @@ public class Applicant {
 
     private String address;
     private int type;
-    private String desc;
-    private String email;
 
-    public Applicant(String address, int type, String desc, String email) {
+    public Applicant(String address, int type) {
         this.address = address;
         this.type = type;
-        this.desc = desc;
-        this.email = email;
     }
 
     public String getAddress() {
@@ -57,21 +53,5 @@ public class Applicant {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }

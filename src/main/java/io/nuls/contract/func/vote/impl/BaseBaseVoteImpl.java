@@ -36,7 +36,6 @@ public class BaseBaseVoteImpl implements BaseVote {
         VoteEntity voteEntity = new VoteEntity();
         voteEntity.setId(voteId);
         voteEntity.setTitle(title);
-        voteEntity.setDesc(desc);
         voteEntity.setRecognizance(value);
         voteEntity.setProposalId(proposalId);
 

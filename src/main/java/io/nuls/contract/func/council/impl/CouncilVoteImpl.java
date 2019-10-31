@@ -85,7 +85,7 @@ public class CouncilVoteImpl implements CouncilVote {
             require(address.totalBalance().compareTo(CouncilConfig.NON_TECHNOLOGY_ENTRY_MINIMUM) >= 0,
                     "The balance is not enough to apply for this type of director");
         }
-        Applicant applicant = new Applicant(addr, type, desc, email);
+        Applicant applicant = new Applicant(addr, type);
         allApplicants.put(addr, applicant);
         emit(new ApplyEvent(addr, type, desc, email));
         return false;

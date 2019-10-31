@@ -71,7 +71,7 @@ public class ProposalVoteImpl implements ProposalVote {
         require(null != email, "email can not empty");
 
         int proposalId = proposals.size() + 1;
-        Proposal proposal = new Proposal(proposalId, name, type, desc, email, Msg.sender(),voteCanModify);
+        Proposal proposal = new Proposal(proposalId, name, type, Msg.sender(),voteCanModify);
         proposals.put(proposalId, proposal);
         emit(new CreateProposalEvent(proposalId, name, type, desc, email, Msg.sender().toString(), voteCanModify));
         return proposal;

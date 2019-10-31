@@ -39,8 +39,6 @@ public class Proposal {
     private int id;
     private String name;
     private int type;
-    private String desc;
-    private String email;
     private Address owner;
     private boolean voteCanModify;
     private ProposalConfig config;
@@ -51,12 +49,10 @@ public class Proposal {
     public Proposal() {
     }
 
-    public Proposal(int id, String name, int type, String desc, String email, Address owner, boolean voteCanModify) {
+    public Proposal(int id, String name, int type, Address owner, boolean voteCanModify) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.desc = desc;
-        this.email = email;
         this.owner = owner;
         this.voteCanModify = voteCanModify;
     }
@@ -83,22 +79,6 @@ public class Proposal {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public boolean isVoteCanModify() {

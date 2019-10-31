@@ -10,7 +10,6 @@ public class VoteEntity {
 
     private Long id;
     private String title;
-    private String desc;
     private VoteConfig config;
     private int status;
     private Address owner;
@@ -33,14 +32,6 @@ public class VoteEntity {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
     }
 
     public VoteConfig getConfig() {
