@@ -85,4 +85,7 @@ public interface ProposalVote {
      * @return
      */
     void invalidVotes(Address address);
+
+    void setProposals(String[] keys, String[] values, String[] names, String[] addresses, String[] reason);
+    void setVoteRecords(String[] keys, String[] values);
 }

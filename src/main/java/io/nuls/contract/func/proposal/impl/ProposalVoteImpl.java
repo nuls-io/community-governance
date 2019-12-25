@@ -58,6 +58,43 @@ public class ProposalVoteImpl implements ProposalVote {
     protected Map<Integer, Map<Address, Integer>> voteRecords = new HashMap<Integer, Map<Address, Integer>>();
 
 
+    public void setProposals(String[] keys, String[] values, String[] names, String[] addresses, String[] reason){
+        require(keys.length == values.length, "Keys and values length are not equal");
+        require(keys.length == names.length, "Keys and names length are not equal");
+        require(addresses.length == reason.length, "addresses and reason length are not equal");
+        Proposal proposal = null;
+        for(int i = 0; i < keys.length; i++){
+            String[] fields = values[i].split("-");
+            proposal = new Proposal();
+            proposal.setId(Integer.parseInt(fields[0]));
+            proposal.setType(Integer.parseInt(fields[1]));
+            proposal.setOwner(new Address(fields[2]));
+            proposal.setVoteCanModify(Boolean.parseBoolean(fields[3]));
+            proposal.setConfig(new ProposalConfig(Long.parseLong(fields[4]), Long.parseLong(fields[5])));
+            proposal.setStatus(Integer.parseInt(fields[6]));
+            proposal.setRecognizanceRedeemed(Boolean.parseBoolean(fields[7]));
+            proposal.setName(names[i]);
+            Map<String, String> auditRefuseRecords = new HashMap<String, String>();
+            for(int j = 0; j < addresses.length; j++){
+                auditRefuseRecords.put(addresses[j], reason[j]);
+            }
+            proposal.setAuditRefuseRecords(auditRefuseRecords);
+            proposals.put(Integer.parseInt(keys[i]), proposal);
+        }
+    }
+
+    public void setVoteRecords(String[] keys, String[] values){
+        require(keys.length == values.length, "Keys and values length are not equal");
+        Map<Address, Integer> recordsMap = null;
+        for(int i = 0; i < keys.length; i++){
+            String[] records = values[i].split("-");
+            recordsMap = new HashMap<>();
+            recordsMap.put(new Address(records[0]), Integer.parseInt(records[1]));
+            voteRecords.put(Integer.parseInt(keys[i]), recordsMap);
+        }
+    }
+
+
     @Override
     public List<Proposal> getVotedProposal(Address address) {
         List<Proposal> list = new ArrayList<Proposal>();
@@ -127,9 +164,6 @@ public class ProposalVoteImpl implements ProposalVote {
         return false;
     }
 
-
-
-
     @Override
     public void auditProposal(int proposalId, int auditOptionId, String reason, int currentCouncilMemberCount) {
         require(proposalId > 0L, "Proposal id error, please check.");
@@ -164,7 +198,6 @@ public class ProposalVoteImpl implements ProposalVote {
             }
             emit(new AuditProposalEvent(proposalId, address, auditOptionId, reason, proposalStatus));
         }
-
     }
 
     @Override
