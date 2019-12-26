@@ -61,6 +61,35 @@ public class ProxyAgentImpl implements ProxyAgent {
     protected Map<String, Set<String>> agents = new HashMap<String, Set<String>>();
 
     @Override
+    public void setProxyData(String[] agentArray, String[] mandatorArray) {
+        require(agentArray.length == mandatorArray.length, "参数长度不一致");
+        String agent, mandator;
+        for(int i = 0, length = agentArray.length; i < length; i++) {
+            agent = agentArray[i];
+            mandator = mandatorArray[i];
+            // save agents
+            Set<String> set = agents.get(agent);
+            if(set == null) {
+                set = new HashSet<String>();
+                agents.put(agent, set);
+            }
+            set.add(mandator);
+            // save mandators
+            mandators.put(mandator, new Mandator(mandator, agent, false));
+        }
+    }
+
+    @Override
+    public Map<String, Mandator> getMandators() {
+        return mandators;
+    }
+
+    @Override
+    public Map<String, Set<String>> getAgents() {
+        return agents;
+    }
+
+    @Override
     public void init(BaseVote baseVote, ProposalVote proposalVote, CouncilVote councilVote){
         this.baseVote = baseVote;
         this.proposalVote = proposalVote;

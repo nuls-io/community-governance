@@ -27,7 +27,9 @@ package io.nuls.contract.func.proxy;
 import io.nuls.contract.func.council.CouncilVote;
 import io.nuls.contract.func.proposal.ProposalVote;
 import io.nuls.contract.func.vote.BaseVote;
+import io.nuls.contract.model.proxy.Mandator;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -89,5 +91,9 @@ public interface ProxyAgent {
      * @return true 可以调用合约投票 false 不可以
      */
     boolean suffrage(String address);
+
+    void setProxyData(String[] agentArray, String[] mandatorArray);
+    Map<String, Set<String>> getAgents();
+    Map<String, Mandator> getMandators();
 
 }

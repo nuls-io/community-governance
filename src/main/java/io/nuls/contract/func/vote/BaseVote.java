@@ -34,4 +34,10 @@ public interface BaseVote {
      * @return
      */
     void invalidVotes(Address address);
+
+    void setVoteData(String baseInfos, String title, String configStr, String[] items);
+    void setVoteRecordData(Long[] voteIdArr, String[] addressArr, String[] itemStrArr);
+    Map<Long, VoteEntity> getVotes();
+    Map<Long, Map<Address, List<Long>>> getVoteRecords();
+
 }

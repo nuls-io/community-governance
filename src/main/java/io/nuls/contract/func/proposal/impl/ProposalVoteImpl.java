@@ -90,7 +90,7 @@ public class ProposalVoteImpl implements ProposalVote {
         Map<Address, Integer> recordsMap = null;
         for(int i = 0; i < keys.length; i++){
             String[] records = values[i].split("-");
-            recordsMap = new HashMap<>();
+            recordsMap = new HashMap<Address, Integer>();
             recordsMap.put(new Address(records[0]), Integer.parseInt(records[1]));
             voteRecords.put(Integer.parseInt(keys[i]), recordsMap);
         }

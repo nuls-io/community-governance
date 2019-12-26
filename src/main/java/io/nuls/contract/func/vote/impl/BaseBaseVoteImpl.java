@@ -24,6 +24,109 @@ public class BaseBaseVoteImpl implements BaseVote {
     protected Map<Long, VoteEntity> votes = new HashMap<Long, VoteEntity>();
     protected Map<Long, Map<Address, List<Long>>> voteRecords = new HashMap<Long, Map<Address, List<Long>>>();
 
+    /**
+     * @param baseInfos id,status,owner,recognizance,proposalId
+     * @param configStr startTime,endTime,isMultipleSelect,minSelectCount,maxSelectCount,voteCanModify
+     * @param items ['id,content']
+     */
+    @Override
+    public void setVoteData(String baseInfos, String title, String configStr, String[] items) {
+        String[] baseInfoArr = baseInfos.split(",");
+        Long id = Long.parseLong(baseInfoArr[0].trim());
+        int status = Integer.parseInt(baseInfoArr[1].trim());
+        Address owner = new Address(baseInfoArr[2].trim());
+        BigInteger recognizance = new BigInteger(baseInfoArr[3].trim());
+        Integer proposalId = null;
+        String trim4 = baseInfoArr[4].trim();
+        if(!"null".equals(trim4)) {
+            proposalId = Integer.parseInt(trim4);
+        }
+        VoteEntity vote = new VoteEntity();
+        vote.setId(id);
+        vote.setStatus(status);
+        vote.setOwner(owner);
+        vote.setRecognizance(recognizance);
+        vote.setProposalId(proposalId);
+        vote.setTitle(title);
+
+        long startTime,endTime;
+        int minSelectCount,maxSelectCount;
+        boolean isMultipleSelect,voteCanModify;
+        String[] configArr = configStr.split(",");
+        startTime = Long.parseLong(configArr[0].trim());
+        endTime = Long.parseLong(configArr[1].trim());
+        isMultipleSelect = "1".equals(configArr[2].trim());
+        minSelectCount = Integer.parseInt(configArr[3].trim());
+        maxSelectCount = Integer.parseInt(configArr[4].trim());
+        voteCanModify = "1".equals(configArr[5].trim());
+        VoteConfig voteConfig = new VoteConfig(startTime, endTime, isMultipleSelect, minSelectCount, maxSelectCount, voteCanModify);
+        vote.setConfig(voteConfig);
+
+        Set<Long> itemIdSet = new HashSet<Long>();
+        List<VoteItem> itemList = new ArrayList<VoteItem>();
+        VoteItem itemObj = null;
+        Long itemId;
+        String itemContent;
+        for(String item : items) {
+            String[] itemArr = item.split(",");
+            itemId = Long.parseLong(itemArr[0].trim());
+            itemContent = itemArr[1].trim();
+            itemObj = new VoteItem();
+            itemObj.setId(itemId);
+            itemObj.setContent(itemContent);
+            itemList.add(itemObj);
+            itemIdSet.add(itemId);
+        }
+        vote.setItems(itemList);
+        vote.setItemIdSet(itemIdSet);
+
+        votes.put(id, vote);
+    }
+
+    /**
+     * @param voteIdArr
+     * @param addressArr
+     * @param itemStrArr ['2,3,5']
+     */
+    @Override
+    public void setVoteRecordData(Long[] voteIdArr, String[] addressArr, String[] itemIdStrArr) {
+        require(voteIdArr.length == addressArr.length, "参数长度不一致[a]");
+        require(voteIdArr.length == itemIdStrArr.length, "参数长度不一致[b]");
+        Long voteId;
+        Address voter;
+        String itemIdStr;
+        List<Long> itemIdList;
+        for (int i = 0, length = voteIdArr.length; i < length; i++) {
+            voteId = voteIdArr[i];
+            voter = new Address(addressArr[i].trim());
+            itemIdStr = itemIdStrArr[i].trim();
+            String[] itemIdArr = itemIdStr.split(",");
+            itemIdList = new ArrayList<Long>();
+            for(String itemId : itemIdArr) {
+                itemIdList.add(Long.parseLong(itemId.trim()));
+            }
+            Map<Address, List<Long>> addressListMap = voteRecords.get(voteId);
+            if(addressListMap == null) {
+                addressListMap = new HashMap<Address, List<Long>>();
+                voteRecords.put(voteId, addressListMap);
+            }
+            List<Long> itemIds = addressListMap.get(voter);
+            if(itemIds == null) {
+                itemIds = itemIdList;
+                addressListMap.put(voter, itemIds);
+            }
+        }
+    }
+
+    @Override
+    public Map<Long, VoteEntity> getVotes() {
+        return votes;
+    }
+
+    @Override
+    public Map<Long, Map<Address, List<Long>>> getVoteRecords() {
+        return voteRecords;
+    }
 
     @Override
     public List<VoteEntity> getVotedVotes(Address address) {

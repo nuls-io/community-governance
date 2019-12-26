@@ -10,6 +10,7 @@ import io.nuls.contract.func.vote.BaseVote;
 import io.nuls.contract.func.vote.impl.BaseBaseVoteImpl;
 import io.nuls.contract.model.council.Applicant;
 import io.nuls.contract.model.proposal.Proposal;
+import io.nuls.contract.model.proxy.Mandator;
 import io.nuls.contract.model.vote.VoteConfig;
 import io.nuls.contract.model.vote.VoteEntity;
 import io.nuls.contract.ownership.Ownable;
@@ -389,4 +390,42 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
         return proposalVote.getVoteRecords();
     }
 
+    public void baseVoteS1(String baseInfos, String title, String configStr, String[] items) {
+        onlyOwner();
+        baseVote.setVoteData(baseInfos, title, configStr, items);
+    }
+    public void baseVoteS2(Long[] voteIdArr, String[] addressArr, String[] itemStrArr) {
+        onlyOwner();
+        baseVote.setVoteRecordData(voteIdArr, addressArr, itemStrArr);
+    }
+
+    @View
+    @JSONSerializable
+    public Map<Long, VoteEntity> getBaseVotes() {
+        return baseVote.getVotes();
+    }
+
+    @View
+    @JSONSerializable
+    public Map<Long, Map<Address, List<Long>>> getBaseVoteRecords() {
+        return baseVote.getVoteRecords();
+    }
+
+
+    public void proxyS1(String[] agentArray, String[] mandatorArray) {
+        onlyOwner();
+        proxyAgent.setProxyData(agentArray, mandatorArray);
+    }
+
+    @View
+    @JSONSerializable
+    public Map<String, Set<String>> getAgents() {
+        return proxyAgent.getAgents();
+    }
+
+    @View
+    @JSONSerializable
+    public Map<String, Mandator> getMandators() {
+        return proxyAgent.getMandators();
+    }
 }

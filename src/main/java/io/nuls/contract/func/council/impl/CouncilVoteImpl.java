@@ -73,7 +73,7 @@ public class CouncilVoteImpl implements CouncilVote {
         for (int i = 0; i < keys.length; i++) {
             String[] records = values[i].split("-");
             for (int j = 0; j < records.length; j++) {
-                addressSet = new HashSet<>();
+                addressSet = new HashSet<String>();
                 addressSet.add(records[j]);
             }
             votes.put(keys[i], addressSet);
