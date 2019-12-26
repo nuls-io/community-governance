@@ -73,7 +73,6 @@ public class ProposalVoteImpl implements ProposalVote {
             proposal.setVoteCanModify(Boolean.parseBoolean(fields[3]));
             proposal.setConfig(new ProposalConfig(Long.parseLong(fields[4]), Long.parseLong(fields[5])));
             proposal.setStatus(Integer.parseInt(fields[6]));
-            proposal.setRecognizanceRedeemed(Boolean.parseBoolean(fields[7]));
             proposal.setName(names[i]);
             Map<String, String> auditRefuseRecords = new HashMap<String, String>();
             for(int j = 0; j < addresses.length; j++){

@@ -43,7 +43,6 @@ public class Proposal {
     private boolean voteCanModify;
     private ProposalConfig config;
     private int status = ProposalConstant.INREVIEW;
-    private boolean recognizanceRedeemed = false;
     private Map<String, String> auditRefuseRecords = new HashMap<String, String>();
 
     public Proposal() {
@@ -119,13 +118,5 @@ public class Proposal {
 
     public void setOwner(Address owner) {
         this.owner = owner;
-    }
-
-    public boolean getRecognizanceRedeemed() {
-        return recognizanceRedeemed;
-    }
-
-    public void setRecognizanceRedeemed(boolean recognizanceRedeemed) {
-        this.recognizanceRedeemed = recognizanceRedeemed;
     }
 }
