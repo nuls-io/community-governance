@@ -368,9 +368,9 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
         return councilVote.getVotes();
     }
 
-    public void proposalS1(String[] keys, String[] values, String[] names, String[] addresses, String[] reason) {
+    public void proposalS1(String[] keys, String[] values, String[] names, String[] pidAddresses, String[] reason) {
         onlyOwner();
-        proposalVote.setProposals(keys, values, names, addresses, reason);
+        proposalVote.setProposals(keys, values, names, pidAddresses, reason);
     }
 
     public void proposalS2(String[] keys, String[] values) {

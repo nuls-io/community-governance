@@ -55,6 +55,10 @@ public class CouncilVoteImpl implements CouncilVote {
      */
     protected Map<String, Applicant> councilMember = new HashMap<String, Applicant>(CouncilConfig.COUNCIL_MEMBERS);
 
+
+
+
+
     @Override
     public void setAllApplicants(String[] keys, String[] values) {
         require(keys.length == values.length, "Keys and values length are not equal");

@@ -57,12 +57,20 @@ public class ProposalVoteImpl implements ProposalVote {
      */
     protected Map<Integer, Map<Address, Integer>> voteRecords = new HashMap<Integer, Map<Address, Integer>>();
 
+    public static void main(String[] args) {
+        String[] keys = {"1","2","3","4","5","6","7","8","9","10"};
+        String[] values = {"1-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572719880-1574015880-4","1-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572719880-1574015880-42-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572720780-1574016780-4","1-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572719880-1574015880-42-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572720780-1574016780-43-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572721660-1574017660-4","1-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572719880-1574015880-42-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572720780-1574016780-43-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572721660-1574017660-44-1-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1---1","1-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572719880-1574015880-42-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572720780-1574016780-43-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572721660-1574017660-44-1-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1---15-3-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1-1572990820-1574286820-4","1-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572719880-1574015880-42-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572720780-1574016780-43-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572721660-1574017660-44-1-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1---15-3-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1-1572990820-1574286820-46-1-NULSd6HgYDRUVZBDVei9Z4xTCtEH1X4d2zC31-1-1573165790-1574461790-4","1-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572719880-1574015880-42-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572720780-1574016780-43-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572721660-1574017660-44-1-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1---15-3-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1-1572990820-1574286820-46-1-NULSd6HgYDRUVZBDVei9Z4xTCtEH1X4d2zC31-1-1573165790-1574461790-47-3-NULSd6Hgg6hzz4Wyf9q2T4DfsdJXBBFiAUHPq-1-1573415660-1574711660-4","1-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572719880-1574015880-42-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572720780-1574016780-43-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572721660-1574017660-44-1-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1---15-3-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1-1572990820-1574286820-46-1-NULSd6HgYDRUVZBDVei9Z4xTCtEH1X4d2zC31-1-1573165790-1574461790-47-3-NULSd6Hgg6hzz4Wyf9q2T4DfsdJXBBFiAUHPq-1-1573415660-1574711660-48-3-NULSd6HgUpbqreoRciwmUqf7BsbKbXT91xCjU-1-1574197250-1575493250-5","1-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572719880-1574015880-42-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572720780-1574016780-43-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572721660-1574017660-44-1-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1---15-3-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1-1572990820-1574286820-46-1-NULSd6HgYDRUVZBDVei9Z4xTCtEH1X4d2zC31-1-1573165790-1574461790-47-3-NULSd6Hgg6hzz4Wyf9q2T4DfsdJXBBFiAUHPq-1-1573415660-1574711660-48-3-NULSd6HgUpbqreoRciwmUqf7BsbKbXT91xCjU-1-1574197250-1575493250-59-1-NULSd6HgcvbGJfeHXquD5wsW1CVu328zeuBep-1-1574219140-1575515140-4","1-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572719880-1574015880-42-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572720780-1574016780-43-1-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2-1-1572721660-1574017660-44-1-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1---15-3-NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe-1-1572990820-1574286820-46-1-NULSd6HgYDRUVZBDVei9Z4xTCtEH1X4d2zC31-1-1573165790-1574461790-47-3-NULSd6Hgg6hzz4Wyf9q2T4DfsdJXBBFiAUHPq-1-1573415660-1574711660-48-3-NULSd6HgUpbqreoRciwmUqf7BsbKbXT91xCjU-1-1574197250-1575493250-59-1-NULSd6HgcvbGJfeHXquD5wsW1CVu328zeuBep-1-1574219140-1575515140-410-3-NULSd6HggRWWph7seQwGW5NQkAJjBGqgLfXkv-1-1574403390-1575699390-4"};
+        String[] names = {"NCG20191103Turkey ambassadors in the 4th quarter of 2019","NCG20191103Portuguese ambassador in the 4th quarter of 2019","NCG20191103Africa ambassador in the 4th quarter of 2019","NCG20191106The Top Contributors for the NULS Community (2019 Q3)  NULS社区2019年第三季度贡献人物","NCG20191106NCG20191106The Top Contributors for the NULS Community (2019 Q3) NULS社区2019年第三季度贡献人物","NCG20191106NULS(2019 Q3)监督工作和建议反馈激励申请提案","NCG20191110West Business Plan Proposal  and Budget","NCG20191119区块链研习社2019全国行活动提案","NCG20191120Contributor Role - Community Lead - Community Funding Proposal","NCG20191122NULS中文社区内容贡献提案"};
+        String[] pidAddresses = {"4-NULSd6HgVfveU6Bquy29yFESncpTPd3PKMAE2","4-NULSd6HgUXJmUL8zsCWH4ej8fWb6Pzneg4yHo"};
+        String[] reason = {"",""};
+        new ProposalVoteImpl().setProposals(keys, values, names, pidAddresses, reason);
+    }
 
     @Override
-    public void setProposals(String[] keys, String[] values, String[] names, String[] addresses, String[] reason){
+    public void setProposals(String[] keys, String[] values, String[] names, String[] pidAddresses, String[] reason){
         require(keys.length == values.length, "Keys and values length are not equal");
         require(keys.length == names.length, "Keys and names length are not equal");
-        require(addresses.length == reason.length, "addresses and reason length are not equal");
+        require(pidAddresses.length == reason.length, "addresses and reason length are not equal");
         Proposal proposal = null;
         for(int i = 0; i < keys.length; i++){
             String[] fields = values[i].split("-");
@@ -71,12 +79,17 @@ public class ProposalVoteImpl implements ProposalVote {
             proposal.setType(Integer.parseInt(fields[1]));
             proposal.setOwner(new Address(fields[2]));
             proposal.setVoteCanModify(Boolean.parseBoolean(fields[3]));
-            proposal.setConfig(new ProposalConfig(Long.parseLong(fields[4]), Long.parseLong(fields[5])));
+            if(null != fields[4] && null != fields[5] && !"".equals(fields[4]) && !"".equals(fields[5])) {
+                proposal.setConfig(new ProposalConfig(Long.parseLong(fields[4]), Long.parseLong(fields[5])));
+            }
             proposal.setStatus(Integer.parseInt(fields[6]));
             proposal.setName(names[i]);
             Map<String, String> auditRefuseRecords = new HashMap<String, String>();
-            for(int j = 0; j < addresses.length; j++){
-                auditRefuseRecords.put(addresses[j], reason[j]);
+            for(int j = 0; j < pidAddresses.length; j++){
+                String[] temp = pidAddresses[j].split("-");
+                if(fields[0].equals(temp[0])){
+                    auditRefuseRecords.put(temp[1], reason[j]);
+                }
             }
             proposal.setAuditRefuseRecords(auditRefuseRecords);
             proposals.put(Integer.parseInt(keys[i]), proposal);
@@ -88,9 +101,12 @@ public class ProposalVoteImpl implements ProposalVote {
         require(keys.length == values.length, "Keys and values length are not equal");
         Map<Address, Integer> recordsMap = null;
         for(int i = 0; i < keys.length; i++){
-            String[] records = values[i].split("-");
+            String[] temp = values[i].split("=");
             recordsMap = new HashMap<Address, Integer>();
-            recordsMap.put(new Address(records[0]), Integer.parseInt(records[1]));
+            for(int j = 0; j < temp.length; j++){
+                String[] record = temp[j].split("-");
+                recordsMap.put(new Address(record[0]), Integer.parseInt(record[1]));
+            }
             voteRecords.put(Integer.parseInt(keys[i]), recordsMap);
         }
     }

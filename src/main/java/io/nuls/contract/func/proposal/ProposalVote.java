@@ -82,7 +82,7 @@ public interface ProposalVote {
      */
     void invalidVotes(Address address);
 
-    void setProposals(String[] keys, String[] values, String[] names, String[] addresses, String[] reason);
+    void setProposals(String[] keys, String[] values, String[] names, String[] pidAddresses, String[] reason);
 
     void setVoteRecords(String[] keys, String[] values);
 
