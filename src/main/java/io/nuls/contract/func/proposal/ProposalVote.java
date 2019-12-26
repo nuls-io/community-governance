@@ -60,11 +60,6 @@ public interface ProposalVote {
     void auditProposal(int proposalId, int auditOptionId, String reason, int currentCouncilMemberCount);
 
     /**
-     * 退还押金
-     */
-//    boolean redemption(int proposalId);
-
-    /**
      * 将执行中的提案设置为已完成状态, 只能由现任理事会成员来执行
      * @param proposalId
      * @return
