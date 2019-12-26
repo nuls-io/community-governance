@@ -29,6 +29,7 @@ import io.nuls.contract.sdk.Address;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author: Charlie
@@ -102,13 +103,6 @@ public interface CouncilVote {
      */
     boolean isCouncilMember(String address);
 
-    /**
-     * 获取理事会成员信息
-     * @return
-     */
-    Map<String, Applicant> getCouncilMember();
-
-
     boolean replaceDirector(String outAddress, String inAddress);
 
     /**
@@ -124,4 +118,21 @@ public interface CouncilVote {
      * @return
      */
     void invalidVotes(String address);
+
+    void setAllApplicants(String[] keys, String[] values);
+
+    void setVotes(String[] keys, String[] values);
+
+    void setCouncilMember(String[] keys, String[] values);
+
+    /**
+     * 获取理事会成员信息
+     * @return
+     */
+    Map<String, Applicant> getCouncilMember();
+
+
+    Map<String, Applicant> getAllApplicants();
+
+    Map<String, Set<String>> getVotes();
 }

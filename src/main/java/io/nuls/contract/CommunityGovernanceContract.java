@@ -90,117 +90,135 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
     }
 
     @View
-    public boolean queryAddressHasVote(@Required long voteId, @Required  Address address) {
+    public boolean queryAddressHasVote(@Required long voteId, @Required Address address) {
         return baseVote.queryAddressHasVote(voteId, address);
     }
 
     /**
      * 委托人设置代理
+     *
      * @param agentAddress
      * @return
      */
-    public boolean setAgent(@Required Address agentAddress){
-       return proxyAgent.setAgent(agentAddress.toString());
+    public boolean setAgent(@Required Address agentAddress) {
+        return proxyAgent.setAgent(agentAddress.toString());
     }
+
     /**
      * 委托人更改代理地址
+     *
      * @param agentAddress
      * @return
      */
-    public boolean modifyAgent(@Required Address agentAddress){
+    public boolean modifyAgent(@Required Address agentAddress) {
         return proxyAgent.modifyAgent(agentAddress.toString());
     }
+
     /**
      * 委托人撤销代理地址
+     *
      * @return
      */
-    public boolean revokeAgent(){
+    public boolean revokeAgent() {
         return proxyAgent.revokeAgent();
     }
+
     /**
      * 代理人撤销委托人地址
+     *
      * @return
      */
-    public boolean revokeMandator(@Required Address mandatorAddress){
+    public boolean revokeMandator(@Required Address mandatorAddress) {
         return proxyAgent.revokeMandator(mandatorAddress.toString());
     }
+
     /**
      * 账户开启不接受委托的功能
      */
-    public boolean closeAgent(){
+    public boolean closeAgent() {
         return proxyAgent.closeAgent();
     }
+
     /**
      * 账户关闭不接受委托的功能
      */
-    public boolean openAgent(){
+    public boolean openAgent() {
         return proxyAgent.openAgent();
     }
+
     /**
      * 查询委托人的代理地址 - view方法
+     *
      * @return
      */
     @View
-    public String getAgent(Address mandatorAddress){
+    public String getAgent(Address mandatorAddress) {
         return proxyAgent.getAgent(mandatorAddress.toString());
     }
+
     /**
      * 查询代理人的委托地址列表 - view方法
+     *
      * @return
      */
     @View
-    public Set<String> getMandators(Address agentAddress){
+    public Set<String> getMandators(Address agentAddress) {
         return proxyAgent.getMandators(agentAddress.toString());
     }
 
     /**
      * 申请理事
      */
-    public boolean apply(@Required int type, @Required String desc, @Required String email){
+    public boolean apply(@Required int type, @Required String desc, @Required String email) {
         return councilVote.apply(type, desc, email);
     }
+
     /**
      * 获取理事信息
      */
     @View
     @JSONSerializable
-    public Applicant getApplicantInfo(@Required Address address){
+    public Applicant getApplicantInfo(@Required Address address) {
         return councilVote.getApplicantInfo(address.toString());
     }
+
     /**
      * 给理事投票
      */
-    public boolean voteDirector(String[] addresses){
+    public boolean voteDirector(String[] addresses) {
         //验证票权
         require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
         Address[] addrs;
-        if(null != addresses) {
+        if (null != addresses) {
             addrs = new Address[addresses.length];
-            for (int i = 0;i < addresses.length; i++) {
+            for (int i = 0; i < addresses.length; i++) {
                 addrs[i] = new Address(addresses[i]);
             }
-        }else {
+        } else {
             addrs = new Address[0];
         }
 
         return councilVote.voteDirector(addrs);
     }
+
     /**
      * 对单个理事投票
+     *
      * @param address
      * @return
      */
-    public boolean voteOneDirector(@Required Address address){
+    public boolean voteOneDirector(@Required Address address) {
         require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
         return councilVote.voteOneDirector(address.toString());
     }
 
     /**
      * 取消对单个理事的投票
+     *
      * @param address
      * @return
      */
-    public boolean cancelVoteOneDirector(@Required Address address){
+    public boolean cancelVoteOneDirector(@Required Address address) {
         require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
         return councilVote.cancelVoteOneDirector(address.toString());
     }
@@ -209,66 +227,61 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
     /**
      * 移除一个候选人
      */
-    public boolean removeApplicant(@Required Address address){
+    public boolean removeApplicant(@Required Address address) {
         onlyOwner();
         return councilVote.removeApplicant(address.toString());
     }
+
     /**
      * 添加理事
      */
-    public boolean addDirector(@Required Address address){
+    public boolean addDirector(@Required Address address) {
         onlyOwner();
         return councilVote.addDirector(address.toString());
     }
+
     /**
      * 移除理事
      */
-    public boolean removeDirector(@Required Address address){
+    public boolean removeDirector(@Required Address address) {
         onlyOwner();
         return councilVote.removeDirector(address.toString());
     }
 
     /**
      * 理事替换
+     *
      * @param outAddress
      * @param inAddress
      * @return
      */
-    public boolean replaceDirector(String outAddress, String inAddress){
+    public boolean replaceDirector(String outAddress, String inAddress) {
         onlyOwner();
         return councilVote.replaceDirector(outAddress, inAddress);
-    }
-    /**
-     * 获取理事会成员信息
-     * @return
-     */
-    @View
-    @JSONSerializable
-    public Map<String, Applicant> getCouncilMember(){
-        return councilVote.getCouncilMember();
     }
 
     /**
      * 创建提案
      */
     @Payable
-    public Proposal createProposal(@Required String name, @Required int type, @Required String desc, @Required String email, @Required boolean voteCanModify){
+    public Proposal createProposal(@Required String name, @Required int type, @Required String desc, @Required String email, @Required boolean voteCanModify) {
         return proposalVote.createProposal(name, type, desc, email, voteCanModify);
     }
 
     @View
     @JSONSerializable
-    public Proposal getProposal(@Required int id){
+    public Proposal getProposal(@Required int id) {
         return proposalVote.getProposal(id);
     }
 
     /**
-     *  为提案投票
-     * @param proposalId 提案id
+     * 为提案投票
+     *
+     * @param proposalId   提案id
      * @param voteOptionId 投票选项id
      * @return
      */
-    public boolean voteProposal(@Required int proposalId, @Required int voteOptionId){
+    public boolean voteProposal(@Required int proposalId, @Required int voteOptionId) {
         //验证票权
         require(proxyAgent.suffrage(Msg.sender().toString()), "The address has an agent, Can't vote");
         return proposalVote.voteProposal(proposalId, voteOptionId);
@@ -276,10 +289,11 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
 
     /**
      * 审核提案
-     * @param proposalId 提案id
+     *
+     * @param proposalId    提案id
      * @param auditOptionId 审核选项 0:拒绝, 1:同意
      */
-    public void auditProposal(@Required int proposalId, @Required int auditOptionId, String reason){
+    public void auditProposal(@Required int proposalId, @Required int auditOptionId, String reason) {
         /**
          * 是否是理事
          */
@@ -290,10 +304,11 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
 
     /**
      * 将执行中的提案设置为已完成状态, 只能由现任理事会成员来执行
+     *
      * @param proposalId
      * @return
      */
-    public boolean setProposalCompleted(int proposalId){
+    public boolean setProposalCompleted(int proposalId) {
         /**
          * 是否是理事
          */
@@ -304,26 +319,74 @@ public class CommunityGovernanceContract extends Ownable implements Contract {
 
     @View
     @JSONSerializable
-    public List<String> getVotedApplicantAddress(@Required Address address){
+    public List<String> getVotedApplicantAddress(@Required Address address) {
         return councilVote.getVotedApplicantAddress(address.toString());
     }
 
     @View
     @JSONSerializable
-    public List<Proposal> getVotedProposal(@Required Address address){
+    public List<Proposal> getVotedProposal(@Required Address address) {
         return proposalVote.getVotedProposal(address);
     }
 
     @View
     @JSONSerializable
-    public List<VoteEntity> getVotedVotes(@Required Address address){
+    public List<VoteEntity> getVotedVotes(@Required Address address) {
         return baseVote.getVotedVotes(address);
     }
 
+    public void councilS1(String[] keys, String[] values){
+        onlyOwner();
+        councilVote.setAllApplicants(keys, values);
+    }
+    public void councilS2(String[] keys, String[] values){
+        onlyOwner();
+        councilVote.setVotes(keys, values);
+    }
+    public void councilS3(String[] keys, String[] values){
+        onlyOwner();
+        councilVote.setCouncilMember(keys, values);
+    }
 
 
+    @View
+    @JSONSerializable
+    public Map<String, Applicant> getCouncilMember(){
+        return councilVote.getCouncilMember();
+    }
 
+    @View
+    @JSONSerializable
+    public Map<String, Applicant> getAllApplicants(){
+        return councilVote.getAllApplicants();
+    }
 
+    @View
+    @JSONSerializable
+    public Map<String, Set<String>> getVotes(){
+        return councilVote.getVotes();
+    }
 
+    public void proposalS1(String[] keys, String[] values, String[] names, String[] addresses, String[] reason) {
+        onlyOwner();
+        proposalVote.setProposals(keys, values, names, addresses, reason);
+    }
+
+    public void proposalS2(String[] keys, String[] values) {
+        onlyOwner();
+        proposalVote.setVoteRecords(keys, values);
+    }
+
+    @View
+    @JSONSerializable
+    public Map<Integer, Proposal> getProposals() {
+        return proposalVote.getProposals();
+    }
+
+    @View
+    @JSONSerializable
+    public Map<Integer, Map<Address, Integer>> getVoteRecords() {
+        return proposalVote.getVoteRecords();
+    }
 
 }

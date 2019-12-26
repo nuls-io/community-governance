@@ -28,6 +28,7 @@ import io.nuls.contract.model.proposal.Proposal;
 import io.nuls.contract.sdk.Address;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: Charlie
@@ -87,5 +88,9 @@ public interface ProposalVote {
     void invalidVotes(Address address);
 
     void setProposals(String[] keys, String[] values, String[] names, String[] addresses, String[] reason);
+
     void setVoteRecords(String[] keys, String[] values);
+
+    Map<Integer, Proposal> getProposals();
+    Map<Integer, Map<Address, Integer>> getVoteRecords();
 }

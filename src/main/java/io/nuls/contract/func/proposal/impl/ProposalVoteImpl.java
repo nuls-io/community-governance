@@ -58,6 +58,7 @@ public class ProposalVoteImpl implements ProposalVote {
     protected Map<Integer, Map<Address, Integer>> voteRecords = new HashMap<Integer, Map<Address, Integer>>();
 
 
+    @Override
     public void setProposals(String[] keys, String[] values, String[] names, String[] addresses, String[] reason){
         require(keys.length == values.length, "Keys and values length are not equal");
         require(keys.length == names.length, "Keys and names length are not equal");
@@ -83,6 +84,7 @@ public class ProposalVoteImpl implements ProposalVote {
         }
     }
 
+    @Override
     public void setVoteRecords(String[] keys, String[] values){
         require(keys.length == values.length, "Keys and values length are not equal");
         Map<Address, Integer> recordsMap = null;
@@ -93,7 +95,6 @@ public class ProposalVoteImpl implements ProposalVote {
             voteRecords.put(Integer.parseInt(keys[i]), recordsMap);
         }
     }
-
 
     @Override
     public List<Proposal> getVotedProposal(Address address) {
@@ -231,4 +232,12 @@ public class ProposalVoteImpl implements ProposalVote {
         return true;
     }
 
+    @Override
+    public Map<Integer, Proposal> getProposals() {
+        return proposals;
+    }
+    @Override
+    public Map<Integer, Map<Address, Integer>> getVoteRecords() {
+        return voteRecords;
+    }
 }

@@ -46,45 +46,74 @@ public class CouncilVoteImpl implements CouncilVote {
      * 所有申请人
      */
     protected Map<String, Applicant> allApplicants = new HashMap<String, Applicant>();
-
     /**
      * K:候选人， V：投给该候选人的投票者列表
      */
     protected Map<String, Set<String>> votes = new HashMap<String, Set<String>>();
-
     /**
      * 理事
      */
     protected Map<String, Applicant> councilMember = new HashMap<String, Applicant>(CouncilConfig.COUNCIL_MEMBERS);
 
+    @Override
+    public void setAllApplicants(String[] keys, String[] values) {
+        require(keys.length == values.length, "Keys and values length are not equal");
+        Map<Address, Integer> recordsMap = null;
+        for (int i = 0; i < keys.length; i++) {
+            String[] records = values[i].split("-");
+            allApplicants.put(keys[i], new Applicant(records[0], Integer.parseInt(records[1])));
+        }
+    }
 
+    @Override
+    public void setVotes(String[] keys, String[] values) {
+        require(keys.length == values.length, "Keys and values length are not equal");
+        Map<Address, Integer> recordsMap = null;
+        Set<String> addressSet = null;
+        for (int i = 0; i < keys.length; i++) {
+            String[] records = values[i].split("-");
+            for (int j = 0; j < records.length; j++) {
+                addressSet = new HashSet<>();
+                addressSet.add(records[j]);
+            }
+            votes.put(keys[i], addressSet);
+        }
+    }
+    @Override
+    public void setCouncilMember(String[] keys, String[] values) {
+        require(keys.length == values.length, "Keys and values length are not equal");
+        Map<Address, Integer> recordsMap = null;
+        for (int i = 0; i < keys.length; i++) {
+            String[] records = values[i].split("-");
+            councilMember.put(keys[i], new Applicant(records[0], Integer.parseInt(records[1])));
+        }
+    }
     @Override
     public List<String> getVotedApplicantAddress(String address) {
         require(null != address, "address can not empty");
         List<String> list = new ArrayList<String>();
-        for(Map.Entry<String, Set<String>> entry  : votes.entrySet()){
-            if(entry.getValue().contains(address)){
+        for (Map.Entry<String, Set<String>> entry : votes.entrySet()) {
+            if (entry.getValue().contains(address)) {
                 list.add(entry.getKey());
             }
         }
         return list;
     }
-
     @Override
     public void invalidVotes(String address) {
         require(null != address, "address can not empty");
-        for(Set<String> set : votes.values()){
+        for (Set<String> set : votes.values()) {
             set.remove(address);
         }
     }
 
     @Override
-    public int getCurrentCouncilMemberCount(){
+    public int getCurrentCouncilMemberCount() {
         return councilMember.size();
     }
 
     @Override
-    public boolean isCouncilMember(String address){
+    public boolean isCouncilMember(String address) {
         return councilMember.containsKey(address);
     }
 
@@ -96,10 +125,10 @@ public class CouncilVoteImpl implements CouncilVote {
         Address address = Msg.sender();
         String addr = address.toString();
         require(!allApplicants.containsKey(addr), "The address has applied");
-        if(type == CouncilConfig.TECHNOLOGY_TYPE){
+        if (type == CouncilConfig.TECHNOLOGY_TYPE) {
             require(address.totalBalance().compareTo(CouncilConfig.TECHNOLOGY_ENTRY_MINIMUM) >= 0,
                     "The balance is not enough to apply for this type of director");
-        }else{
+        } else {
             require(address.totalBalance().compareTo(CouncilConfig.NON_TECHNOLOGY_ENTRY_MINIMUM) >= 0,
                     "The balance is not enough to apply for this type of director");
         }
@@ -139,7 +168,7 @@ public class CouncilVoteImpl implements CouncilVote {
         String voter = Msg.sender().toString();
         //扫描之前的投票记录，如果该投票者投过票则先取消，再重新记录新的投票
         //TODO 风险点，候选人没有上限(按申请理事费用 技术2.5万 非技术5万 和币总量，估算极端情况有2000~4000个申请人)
-        for(Set<String> set : votes.values()){
+        for (Set<String> set : votes.values()) {
             set.remove(voter);
         }
         String[] addrs = new String[addresses.length];
@@ -165,15 +194,15 @@ public class CouncilVoteImpl implements CouncilVote {
         String voter = Msg.sender().toString();
         //是否已投11个
         int voted = 0;
-        for(Set<String> set : votes.values()){
-            if(set.contains(voter)){
+        for (Set<String> set : votes.values()) {
+            if (set.contains(voter)) {
                 voted++;
             }
         }
         require(voted < CouncilConfig.COUNCIL_MEMBERS, "The number of voting addresses must be between 1 and 11");
 
         Set<String> addressSet = votes.get(address);
-        if(null == addressSet){
+        if (null == addressSet) {
             addressSet = new HashSet<String>();
             votes.put(address, addressSet);
         }
@@ -215,11 +244,11 @@ public class CouncilVoteImpl implements CouncilVote {
         require(null != applicant, "The address did not apply to the director");
         int type = applicant.getType();
         int currentTypeMember = getCountByType(type);
-        if(type == CouncilConfig.MANAGEMENT_TYPE){
+        if (type == CouncilConfig.MANAGEMENT_TYPE) {
             require(currentTypeMember < CouncilConfig.MANAGEMENT_MEMBERS, "The management director is full");
-        } else if (type == CouncilConfig.OPERATIONS_TYPE){
+        } else if (type == CouncilConfig.OPERATIONS_TYPE) {
             require(currentTypeMember < CouncilConfig.OPERATIONS_MEMBERS, "The operations director is full");
-        } else if (type == CouncilConfig.TECHNOLOGY_TYPE){
+        } else if (type == CouncilConfig.TECHNOLOGY_TYPE) {
             require(currentTypeMember < CouncilConfig.TECHNOLOGY_MEMBERS, "The technology director is full");
         }
         councilMember.put(applicant.getAddress(), applicant);
@@ -247,14 +276,22 @@ public class CouncilVoteImpl implements CouncilVote {
     public Map<String, Applicant> getCouncilMember() {
         return councilMember;
     }
+    @Override
+    public Map<String, Applicant> getAllApplicants() {
+        return allApplicants;
+    }
+    @Override
+    public Map<String, Set<String>> getVotes() {
+        return votes;
+    }
 
-    private int getCountByType(int type){
+    private int getCountByType(int type) {
         int count = 0;
-         for(Applicant applicant : councilMember.values()){
-             if(type == applicant.getType()){
-                 count++;
-             }
-         }
-         return count;
+        for (Applicant applicant : councilMember.values()) {
+            if (type == applicant.getType()) {
+                count++;
+            }
+        }
+        return count;
     }
 }
