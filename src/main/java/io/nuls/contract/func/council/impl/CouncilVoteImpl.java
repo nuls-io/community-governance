@@ -55,10 +55,6 @@ public class CouncilVoteImpl implements CouncilVote {
      */
     protected Map<String, Applicant> councilMember = new HashMap<String, Applicant>(CouncilConfig.COUNCIL_MEMBERS);
 
-
-
-
-
     @Override
     public void setAllApplicants(String[] keys, String[] values) {
         require(keys.length == values.length, "Keys and values length are not equal");
@@ -77,8 +73,14 @@ public class CouncilVoteImpl implements CouncilVote {
         for (int i = 0; i < keys.length; i++) {
             String[] records = values[i].split("-");
             for (int j = 0; j < records.length; j++) {
+                if(null == records[j] || "".equals(records[j])){
+                    continue;
+                }
                 addressSet = new HashSet<String>();
                 addressSet.add(records[j]);
+            }
+            if(addressSet.isEmpty()){
+                continue;
             }
             votes.put(keys[i], addressSet);
         }
@@ -103,6 +105,7 @@ public class CouncilVoteImpl implements CouncilVote {
         }
         return list;
     }
+
     @Override
     public void invalidVotes(String address) {
         require(null != address, "address can not empty");
