@@ -84,37 +84,32 @@ public class BaseBaseVoteImpl implements BaseVote {
     }
 
     /**
-     * @param voteIdArr
-     * @param addressArr
-     * @param itemStrArr ['2,3,5']
+     * @param voteIdArr [1,2]
+     * @param addressArr ['NULSd6HgfabpMiKgaNujQqZQpvAsroWVDt6R9,NULSd6HgagM11WK4AYyz6sY4wZ8TmSkk7fwmr','NULSd6HgZW2bVnYZciYq8iroGkyGVmmas63dM,NULSd6HgjLbDbPWsTU41udD4mscnSLnScP3fe']
+     * @param itemStrArr ['6-7-8,1-2-3', '3-4-5,4-5-6']
      */
     @Override
-    public void setVoteRecordData(Long[] voteIdArr, String[] addressArr, String[] itemIdStrArr) {
-        require(voteIdArr.length == addressArr.length, "参数长度不一致[a]");
-        require(voteIdArr.length == itemIdStrArr.length, "参数长度不一致[b]");
-        Long voteId;
-        Address voter;
-        String itemIdStr;
-        List<Long> itemIdList;
+    public void setVoteRecordData(Long[] voteIdArr, String[] addressSetArr, String[] itemIdStrArr) {
+        // protected Map<Long, Map<Address, List<Long>>> voteRecords = new HashMap<Long, Map<Address, List<Long>>>();
         for (int i = 0, length = voteIdArr.length; i < length; i++) {
-            voteId = voteIdArr[i];
-            voter = new Address(addressArr[i].trim());
-            itemIdStr = itemIdStrArr[i].trim();
-            String[] itemIdArr = itemIdStr.split(",");
-            itemIdList = new ArrayList<Long>();
-            for(String itemId : itemIdArr) {
-                itemIdList.add(Long.parseLong(itemId.trim()));
+            Long voteId = voteIdArr[i];
+            Map<Address, List<Long>> addressListMap = new HashMap<Address, List<Long>>();
+            String addressSet = addressSetArr[i].trim();
+            String addressItemIdArrSet = itemIdStrArr[i].trim();
+            String[] addressItemIdArrStr = addressItemIdArrSet.split(",");
+            String[] addressArr = addressSet.split(",");
+            int j = 0;
+            for(String voter : addressArr) {
+                String itemIdStr = addressItemIdArrStr[j].trim();
+                String[] itemIdArr = itemIdStr.split("-");
+                List<Long> itemIdList = new ArrayList<Long>();
+                for(String itemId : itemIdArr) {
+                    itemIdList.add(Long.parseLong(itemId.trim()));
+                }
+                addressListMap.put(new Address(voter), itemIdList);
+                j++;
             }
-            Map<Address, List<Long>> addressListMap = voteRecords.get(voteId);
-            if(addressListMap == null) {
-                addressListMap = new HashMap<Address, List<Long>>();
-                voteRecords.put(voteId, addressListMap);
-            }
-            List<Long> itemIds = addressListMap.get(voter);
-            if(itemIds == null) {
-                itemIds = itemIdList;
-                addressListMap.put(voter, itemIds);
-            }
+            voteRecords.put(voteId, addressListMap);
         }
     }
 
